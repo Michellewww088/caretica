@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Caretica — Community & FAQ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="app.css"/>
+</head>
+<body>
+<div class="app-layout">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><span>🌸</span><span>Caretica</span></div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+      <a href="profile.html"   class="nav-item"><i class="fas fa-baby"></i> Baby Profile</a>
+      <a href="growth.html"    class="nav-item"><i class="fas fa-chart-line"></i> Growth Tracking</a>
+      <a href="reminders.html" class="nav-item"><i class="fas fa-bell"></i> Reminders</a>
+      <a href="community.html" class="nav-item active"><i class="fas fa-comments"></i> Community</a>
+    </nav>
+    <div class="sidebar-upgrade">
+      <div class="upgrade-card">
+        <i class="fas fa-crown"></i>
+        <p>Unlock Premium features</p>
+        <button class="btn-upgrade" onclick="showPremiumModal()">Upgrade Now</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="app-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="topbar-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+        <span class="topbar-title">Community & FAQ</span>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-premium btn-sm" onclick="showPremiumModal()">
+          <i class="fas fa-robot"></i> Ask AI <span class="badge badge-premium" style="margin-left:4px;"><i class="fas fa-crown"></i></span>
+        </button>
+        <button class="icon-btn"><i class="fas fa-bell"></i><span class="notif-dot"></span></button>
+        <div class="user-avatar">S</div>
+      </div>
+    </header>
+
+    <main class="main-content">
+
+      <!-- DISCLAIMER BANNER -->
+      <div style="background:#EFF6FF; border:1px solid #BFDBFE; border-radius:12px; padding:14px 18px; display:flex; align-items:center; gap:12px; margin-bottom:24px;">
+        <i class="fas fa-circle-info" style="color:#3B82F6; font-size:1.1rem; flex-shrink:0;"></i>
+        <span style="font-size:0.85rem; color:#1E3A5F; font-weight:600;">
+          <strong>Educational Purposes Only:</strong> All information in this section is for general education and does not constitute medical advice. Always consult your healthcare provider for medical decisions.
+        </span>
+      </div>
+
+      <!-- SEARCH -->
+      <div class="search-wrap">
+        <i class="fas fa-search"></i>
+        <input type="text" class="search-input" placeholder="Search questions about baby health, milestones, feeding..." oninput="searchFAQ(this.value)"/>
+      </div>
+
+      <!-- TOPIC TABS -->
+      <div class="tabs mb-6">
+        <button class="tab-btn active" onclick="filterTopic('all',this)">All Topics</button>
+        <button class="tab-btn" onclick="filterTopic('feeding',this)">🍼 Feeding</button>
+        <button class="tab-btn" onclick="filterTopic('sleep',this)">😴 Sleep</button>
+        <button class="tab-btn" onclick="filterTopic('growth',this)">📈 Growth</button>
+        <button class="tab-btn" onclick="filterTopic('vaccine',this)">💉 Vaccines</button>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1.4fr 1fr; gap:28px;">
+
+        <!-- FAQ / Q&A -->
+        <div>
+          <div class="section-title"><i class="fas fa-circle-question"></i> Frequently Asked Questions</div>
+
+          <div class="faq-item-app faq-topic" data-topic="feeding">
+            <button class="faq-question-app" aria-expanded="false" onclick="toggleFAQ(this)">
+              How often should I feed my 8-month-old? <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer-app">
+              <p>At 8 months, most babies need 3–5 nursing sessions or 24–32 oz of formula per day, plus 2–3 solid food meals. Watch for hunger cues like rooting or sucking on hands. Feeding schedules can vary — follow your baby's lead while maintaining consistent timing.</p>
+            </div>
+          </div>
+
+          <div class="faq-item-app faq-topic" data-topic="sleep">
+            <button class="faq-question-app" aria-expanded="false" onclick="toggleFAQ(this)">
+              How many hours of sleep does my 8-month-old need? <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer-app">
+              <p>Babies 6–12 months typically need 12–16 hours of sleep per 24-hour period (including naps). Most 8-month-olds take 2 naps (totaling 3–4 hours) and sleep about 10–12 hours at night. Establish a calming bedtime routine to improve sleep quality.</p>
+            </div>
+          </div>
+
+          <div class="faq-item-app faq-topic" data-topic="growth">
+            <button class="faq-question-app" aria-expanded="false" onclick="toggleFAQ(this)">
+              What is a healthy weight for an 8-month-old girl? <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer-app">
+              <p>According to WHO standards, the average weight for an 8-month-old girl is approximately 7.5 kg (50th percentile), with a healthy range between 6.3–9.1 kg. Weight alone is not the only indicator of health — consult your pediatrician for a complete assessment using growth charts.</p>
+            </div>
+          </div>
+
+          <div class="faq-item-app faq-topic" data-topic="vaccine">
+            <button class="faq-question-app" aria-expanded="false" onclick="toggleFAQ(this)">
+              What vaccines does my baby need at 8 months? <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer-app">
+              <p>By 8 months, babies typically have received vaccines at birth, 2, 4, and 6 months. Common vaccines in this period include HepB, DTaP, IPV, Hib, PCV13, and Rotavirus. The flu vaccine (influenza) is recommended annually starting at 6 months. Always follow your pediatrician's schedule.</p>
+            </div>
+          </div>
+
+          <div class="faq-item-app faq-topic" data-topic="feeding">
+            <button class="faq-question-app" aria-expanded="false" onclick="toggleFAQ(this)">
+              When should I introduce solid foods? <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer-app">
+              <p>Most pediatricians recommend introducing solid foods around 6 months. Signs of readiness include sitting with support, showing interest in food, and loss of the tongue-thrust reflex. Start with single-ingredient purees, then gradually introduce textures and variety. Avoid honey, cow's milk as a drink, and choking hazards.</p>
+            </div>
+          </div>
+
+          <div class="faq-item-app faq-topic" data-topic="growth">
+            <button class="faq-question-app" aria-expanded="false" onclick="toggleFAQ(this)">
+              What developmental milestones should my 8-month-old reach? <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer-app">
+              <p>By 8 months, most babies can sit without support, bear weight on legs when held upright, say "mama" or "dada" (not always specific), pick up small objects with all fingers, and look for partially hidden objects. Every baby develops at their own pace — consult your doctor if you have concerns.</p>
+            </div>
+          </div>
+
+          <div class="faq-item-app faq-topic" data-topic="sleep">
+            <button class="faq-question-app" aria-expanded="false" onclick="toggleFAQ(this)">
+              What is sleep regression and how do I handle it? <i class="fas fa-chevron-down"></i>
+            </button>
+            <div class="faq-answer-app">
+              <p>Sleep regression is a period when a baby who was sleeping well suddenly wakes more frequently. Common at 4, 8, and 12 months, it often coincides with developmental leaps. Maintain consistent routines, offer comfort without creating new sleep dependencies, and remember it is temporary (usually 2–6 weeks).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIDEBAR: AI Q&A + FEATURED TOPICS -->
+        <div>
+          <!-- ASK AI (Premium) -->
+          <div class="card mb-6">
+            <div class="card-header">
+              <span class="card-title"><i class="fas fa-robot"></i> Ask AI</span>
+              <span class="badge badge-premium"><i class="fas fa-crown"></i> Premium</span>
+            </div>
+            <div style="text-align:center; padding:20px 0;">
+              <div style="font-size:3rem; margin-bottom:12px;">🤖</div>
+              <p style="font-size:0.88rem; color:#64748B; margin-bottom:16px; line-height:1.6;">Get instant, personalized educational answers powered by AI — tailored to Emma's age and health data.</p>
+              <button class="btn btn-premium btn-block" onclick="showPremiumModal()">
+                <i class="fas fa-crown"></i> Unlock AI Q&A
+              </button>
+              <p style="font-size:0.72rem; color:#94A3B8; margin-top:10px;"><i class="fas fa-info-circle"></i> AI answers are educational only. Not medical advice.</p>
+            </div>
+          </div>
+
+          <!-- FEATURED TOPICS -->
+          <div class="card mb-6">
+            <div class="card-title mb-4"><i class="fas fa-star"></i> Popular Topics</div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <button class="topic-chip" onclick="filterTopic('feeding', document.querySelectorAll('.tab-btn')[1])" style="display:flex; align-items:center; gap:10px; background:#EFF6FF; border:none; border-radius:10px; padding:12px 14px; cursor:pointer; text-align:left; transition:0.2s;">
+                <span style="font-size:1.2rem;">🍼</span>
+                <div>
+                  <div style="font-weight:700; font-size:0.88rem; color:#1E3A5F;">Breastfeeding & Formula</div>
+                  <div style="font-size:0.75rem; color:#64748B;">12 questions</div>
+                </div>
+              </button>
+              <button class="topic-chip" onclick="filterTopic('sleep', document.querySelectorAll('.tab-btn')[2])" style="display:flex; align-items:center; gap:10px; background:#F3E8FF; border:none; border-radius:10px; padding:12px 14px; cursor:pointer; text-align:left; transition:0.2s;">
+                <span style="font-size:1.2rem;">😴</span>
+                <div>
+                  <div style="font-weight:700; font-size:0.88rem; color:#1E3A5F;">Baby Sleep & Routines</div>
+                  <div style="font-size:0.75rem; color:#64748B;">9 questions</div>
+                </div>
+              </button>
+              <button class="topic-chip" onclick="filterTopic('growth', document.querySelectorAll('.tab-btn')[3])" style="display:flex; align-items:center; gap:10px; background:#ECFDF5; border:none; border-radius:10px; padding:12px 14px; cursor:pointer; text-align:left; transition:0.2s;">
+                <span style="font-size:1.2rem;">📈</span>
+                <div>
+                  <div style="font-weight:700; font-size:0.88rem; color:#1E3A5F;">Growth & Development</div>
+                  <div style="font-size:0.75rem; color:#64748B;">15 questions</div>
+                </div>
+              </button>
+              <button class="topic-chip" onclick="filterTopic('vaccine', document.querySelectorAll('.tab-btn')[4])" style="display:flex; align-items:center; gap:10px; background:#FEF3C7; border:none; border-radius:10px; padding:12px 14px; cursor:pointer; text-align:left; transition:0.2s;">
+                <span style="font-size:1.2rem;">💉</span>
+                <div>
+                  <div style="font-weight:700; font-size:0.88rem; color:#1E3A5F;">Vaccines & Immunization</div>
+                  <div style="font-size:0.75rem; color:#64748B;">8 questions</div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- COMMUNITY STORIES -->
+          <div class="card">
+            <div class="card-title mb-4"><i class="fas fa-users"></i> Community Stories</div>
+            <div style="display:flex; flex-direction:column; gap:14px;">
+              <div style="border-left:3px solid #3B82F6; padding-left:12px;">
+                <p style="font-size:0.83rem; color:#1E3A5F; line-height:1.6;">"Caretica's sleep tracker helped me realize Emma was under-sleeping. Game changer!"</p>
+                <span style="font-size:0.75rem; color:#94A3B8; font-weight:600;">— Maria T., mom of 2</span>
+              </div>
+              <div style="border-left:3px solid #10B981; padding-left:12px;">
+                <p style="font-size:0.83rem; color:#1E3A5F; line-height:1.6;">"The vaccine schedule reminders are lifesaving. Never missed an appointment!"</p>
+                <span style="font-size:0.75rem; color:#94A3B8; font-weight:600;">— Priya K., first-time mom</span>
+              </div>
+              <div style="border-left:3px solid #7C3AED; padding-left:12px;">
+                <p style="font-size:0.83rem; color:#1E3A5F; line-height:1.6;">"The WHO growth chart comparison gave me peace of mind about my son's progress."</p>
+                <span style="font-size:0.75rem; color:#94A3B8; font-weight:600;">— James & Rachel, parents</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- PREMIUM MODAL -->
+<div class="modal-overlay" id="premiumModal">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-close" onclick="hidePremiumModal()"><i class="fas fa-times"></i></button>
+      <i class="fas fa-crown"></i>
+      <h2>Upgrade to Premium</h2>
+      <p>Unlock priority AI Q&A & more</p>
+    </div>
+    <div class="modal-body">
+      <table class="feature-table">
+        <thead><tr><th>Feature</th><th>Free</th><th>Premium</th></tr></thead>
+        <tbody>
+          <tr><td>FAQ library access</td><td><i class="fas fa-check check-yes"></i></td><td><i class="fas fa-check check-yes"></i></td></tr>
+          <tr><td>AI-powered Q&A</td><td><i class="fas fa-times check-no"></i></td><td><i class="fas fa-crown check-premium"></i></td></tr>
+          <tr><td>Personalized answers (by baby's data)</td><td><i class="fas fa-times check-no"></i></td><td><i class="fas fa-crown check-premium"></i></td></tr>
+          <tr><td>Priority response queue</td><td><i class="fas fa-times check-no"></i></td><td><i class="fas fa-crown check-premium"></i></td></tr>
+          <tr><td>Save & bookmark answers</td><td><i class="fas fa-times check-no"></i></td><td><i class="fas fa-crown check-premium"></i></td></tr>
+        </tbody>
+      </table>
+      <div class="price-box">
+        <div class="price">$9.99 <span>/ month</span></div>
+        <p>Or $89.99/year — save 25%</p>
+      </div>
+      <button class="btn btn-premium btn-block mb-4"><i class="fas fa-crown"></i> Subscribe to Premium</button>
+      <div class="trust-badges">
+        <div class="trust-badge"><i class="fas fa-shield-alt"></i> Secure Payment</div>
+        <div class="trust-badge"><i class="fas fa-undo"></i> 30-day Refund</div>
+        <div class="trust-badge"><i class="fas fa-times-circle"></i> Cancel Anytime</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  function toggleFAQ(btn) {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    document.querySelectorAll('.faq-question-app').forEach(b => {
+      b.setAttribute('aria-expanded', 'false');
+      b.nextElementSibling.classList.remove('open');
+    });
+    if (!expanded) {
+      btn.setAttribute('aria-expanded', 'true');
+      btn.nextElementSibling.classList.add('open');
+    }
+  }
+  function filterTopic(topic, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    document.querySelectorAll('.faq-topic').forEach(item => {
+      item.style.display = (topic === 'all' || item.dataset.topic === topic) ? 'block' : 'none';
+    });
+  }
+  function searchFAQ(query) {
+    const q = query.toLowerCase();
+    document.querySelectorAll('.faq-item-app').forEach(item => {
+      const text = item.textContent.toLowerCase();
+      item.style.display = (!q || text.includes(q)) ? 'block' : 'none';
+    });
+  }
+</script>
+</body>
+</html>

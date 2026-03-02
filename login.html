@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Caretica — Login / Register</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Nunito', sans-serif; min-height: 100vh; display: flex; background: #F0F7FF; }
+
+    /* LEFT PANEL */
+    .left-panel {
+      flex: 1; background: linear-gradient(160deg, #1D4ED8 0%, #4F46E5 50%, #7C3AED 100%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 48px 40px; color: #fff; position: relative; overflow: hidden;
+    }
+    .left-panel::before {
+      content: ''; position: absolute;
+      width: 400px; height: 400px; border-radius: 50%;
+      background: rgba(255,255,255,0.07); top: -100px; right: -100px;
+    }
+    .left-panel::after {
+      content: ''; position: absolute;
+      width: 300px; height: 300px; border-radius: 50%;
+      background: rgba(255,255,255,0.05); bottom: -80px; left: -60px;
+    }
+    .left-content { position: relative; z-index: 1; text-align: center; max-width: 380px; }
+    .brand { font-size: 1.8rem; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 32px; }
+    .brand span:first-child { font-size: 2rem; }
+    .illustration { font-size: 6rem; margin-bottom: 24px; display: block; animation: float 3s ease-in-out infinite; }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+    .tagline { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; line-height: 1.3; margin-bottom: 14px; }
+    .sub-tagline { font-size: 0.95rem; opacity: 0.8; line-height: 1.7; }
+    .trust-row { display: flex; gap: 24px; margin-top: 36px; justify-content: center; flex-wrap: wrap; }
+    .trust-item { display: flex; align-items: center; gap: 8px; font-size: 0.83rem; opacity: 0.85; }
+    .trust-item i { font-size: 1rem; }
+
+    /* RIGHT PANEL */
+    .right-panel {
+      width: 480px; background: #fff; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: 48px 44px;
+      overflow-y: auto;
+    }
+    .right-content { width: 100%; max-width: 360px; }
+
+    .form-header { text-align: center; margin-bottom: 32px; }
+    .form-header h2 { font-size: 1.6rem; font-weight: 900; color: #1E3A5F; margin-bottom: 6px; }
+    .form-header p { color: #64748B; font-size: 0.92rem; }
+
+    /* TABS */
+    .auth-tabs { display: flex; background: #F0F7FF; border-radius: 12px; padding: 4px; margin-bottom: 28px; }
+    .auth-tab {
+      flex: 1; padding: 11px; text-align: center;
+      border-radius: 10px; border: none; font-family: inherit;
+      font-weight: 700; font-size: 0.92rem; cursor: pointer;
+      color: #64748B; background: transparent; transition: 0.25s ease;
+    }
+    .auth-tab.active { background: #fff; color: #1D4ED8; box-shadow: 0 2px 8px rgba(59,130,246,0.15); }
+
+    /* FORM */
+    .form-section { display: none; }
+    .form-section.active { display: block; }
+
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 0.85rem; font-weight: 700; color: #1E3A5F; margin-bottom: 6px; }
+    .input-wrap { position: relative; }
+    .input-wrap i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94A3B8; font-size: 0.95rem; }
+    .form-input {
+      width: 100%; padding: 12px 14px 12px 40px;
+      border: 1.5px solid #E2EBF6; border-radius: 10px;
+      font-family: inherit; font-size: 0.95rem; color: #1E3A5F;
+      outline: none; transition: 0.25s ease;
+    }
+    .form-input:focus { border-color: #3B82F6; box-shadow: 0 0 0 3px rgba(59,130,246,0.12); }
+
+    .pwd-toggle {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; color: #94A3B8; font-size: 0.9rem;
+    }
+
+    .forgot-link { display: block; text-align: right; font-size: 0.82rem; font-weight: 700; color: #3B82F6; margin-top: 4px; }
+    .forgot-link:hover { color: #1D4ED8; }
+
+    .checkbox-row { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+    .checkbox-row input[type="checkbox"] { margin-top: 2px; accent-color: #3B82F6; width: 16px; height: 16px; cursor: pointer; }
+    .checkbox-row label { font-size: 0.83rem; color: #64748B; cursor: pointer; line-height: 1.5; }
+    .checkbox-row label a { color: #3B82F6; font-weight: 700; }
+
+    .btn-auth {
+      width: 100%; padding: 14px; border: none; border-radius: 10px;
+      background: linear-gradient(135deg, #1D4ED8, #4F46E5);
+      color: #fff; font-family: inherit; font-size: 1rem; font-weight: 800;
+      cursor: pointer; transition: 0.25s ease;
+      box-shadow: 0 4px 20px rgba(59,130,246,0.3);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-top: 20px;
+    }
+    .btn-auth:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(59,130,246,0.4); }
+
+    .divider { display: flex; align-items: center; gap: 12px; margin: 22px 0; }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #E2EBF6; }
+    .divider span { font-size: 0.78rem; color: #94A3B8; font-weight: 600; }
+
+    .social-btns { display: flex; gap: 12px; }
+    .social-btn {
+      flex: 1; padding: 11px; border: 1.5px solid #E2EBF6; border-radius: 10px;
+      background: #fff; cursor: pointer; font-family: inherit; font-size: 0.88rem; font-weight: 700;
+      color: #1E3A5F; display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: 0.25s ease;
+    }
+    .social-btn:hover { background: #F0F7FF; border-color: #3B82F6; }
+    .social-btn .fab { font-size: 1.1rem; }
+    .fab.fa-google { color: #EA4335; }
+    .fab.fa-apple { color: #000; }
+
+    /* SECURITY TOOLTIP */
+    .security-note {
+      display: flex; align-items: center; gap: 10px;
+      background: #ECFDF5; border: 1px solid #BBF7D0;
+      border-radius: 10px; padding: 12px 14px; margin-top: 20px;
+      cursor: default; position: relative;
+    }
+    .security-note i { color: #10B981; font-size: 1rem; flex-shrink: 0; }
+    .security-note span { font-size: 0.8rem; color: #065F46; font-weight: 600; }
+    .security-tooltip {
+      position: absolute; bottom: calc(100% + 8px); left: 0; right: 0;
+      background: #1E3A5F; color: #fff; border-radius: 10px;
+      padding: 12px 14px; font-size: 0.78rem; line-height: 1.6;
+      opacity: 0; pointer-events: none; transition: 0.25s ease;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    .security-note:hover .security-tooltip { opacity: 1; }
+
+    @media (max-width: 860px) {
+      .left-panel { display: none; }
+      .right-panel { width: 100%; padding: 36px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LEFT -->
+  <div class="left-panel">
+    <div class="left-content">
+      <div class="brand"><span>🌸</span> Caretica</div>
+      <span class="illustration">👶</span>
+      <h1 class="tagline">Track your baby's health, easily and safely</h1>
+      <p class="sub-tagline">From pregnancy to early childhood — smart tracking, timely reminders, and seamless care coordination, all in one place.</p>
+      <div class="trust-row">
+        <div class="trust-item"><i class="fas fa-shield-alt"></i> HIPAA Compliant</div>
+        <div class="trust-item"><i class="fas fa-lock"></i> End-to-End Encrypted</div>
+        <div class="trust-item"><i class="fas fa-users"></i> 50K+ Families</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right-panel">
+    <div class="right-content">
+      <div class="form-header">
+        <h2>Welcome Back 🌸</h2>
+        <p>Sign in to your Caretica account</p>
+      </div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('login')">Login</button>
+        <button class="auth-tab" onclick="switchTab('register')">Register</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div class="form-section active" id="loginForm">
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <div class="input-wrap">
+            <i class="fas fa-envelope"></i>
+            <input type="email" class="form-input" placeholder="you@example.com" id="loginEmail"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="input-wrap">
+            <i class="fas fa-lock"></i>
+            <input type="password" class="form-input" placeholder="Enter your password" id="loginPassword"/>
+            <button class="pwd-toggle" onclick="togglePwd('loginPassword', this)"><i class="fas fa-eye"></i></button>
+          </div>
+          <a href="#" class="forgot-link">Forgot password?</a>
+        </div>
+        <button class="btn-auth" onclick="doLogin()">
+          <i class="fas fa-arrow-right-to-bracket"></i> Sign In
+        </button>
+        <div class="divider"><span>or continue with</span></div>
+        <div class="social-btns">
+          <button class="social-btn"><i class="fab fa-google"></i> Google</button>
+          <button class="social-btn"><i class="fab fa-apple"></i> Apple</button>
+        </div>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div class="form-section" id="registerForm">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <div class="input-wrap">
+            <i class="fas fa-user"></i>
+            <input type="text" class="form-input" placeholder="Your name"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <div class="input-wrap">
+            <i class="fas fa-envelope"></i>
+            <input type="email" class="form-input" placeholder="you@example.com"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <div class="input-wrap">
+            <i class="fas fa-lock"></i>
+            <input type="password" class="form-input" placeholder="Create a password" id="regPwd"/>
+            <button class="pwd-toggle" onclick="togglePwd('regPwd', this)"><i class="fas fa-eye"></i></button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirm Password</label>
+          <div class="input-wrap">
+            <i class="fas fa-lock"></i>
+            <input type="password" class="form-input" placeholder="Confirm your password"/>
+          </div>
+        </div>
+        <div class="checkbox-row">
+          <input type="checkbox" id="parentCheck"/>
+          <label for="parentCheck">I'm a parent or expecting parent joining to track maternal and infant health.</label>
+        </div>
+        <div class="checkbox-row">
+          <input type="checkbox" id="termsCheck"/>
+          <label for="termsCheck">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</label>
+        </div>
+        <button class="btn-auth" onclick="doRegister()">
+          <i class="fas fa-user-plus"></i> Create Account
+        </button>
+        <div class="divider"><span>or sign up with</span></div>
+        <div class="social-btns">
+          <button class="social-btn"><i class="fab fa-google"></i> Google</button>
+          <button class="social-btn"><i class="fab fa-apple"></i> Apple</button>
+        </div>
+      </div>
+
+      <!-- SECURITY NOTE -->
+      <div class="security-note">
+        <i class="fas fa-shield-alt"></i>
+        <span>Your data is protected & never sold</span>
+        <div class="security-tooltip">
+          🔒 Caretica uses AES-256 encryption and is fully HIPAA-compliant. Your health data is stored securely and is never shared or sold to third parties. You are always in control.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(tab) {
+      document.querySelectorAll('.auth-tab').forEach((t, i) => {
+        t.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
+      });
+      document.getElementById('loginForm').classList.toggle('active', tab === 'login');
+      document.getElementById('registerForm').classList.toggle('active', tab === 'register');
+      document.querySelector('.form-header h2').textContent = tab === 'login' ? 'Welcome Back 🌸' : 'Join Caretica 🌸';
+      document.querySelector('.form-header p').textContent = tab === 'login' ? 'Sign in to your Caretica account' : 'Create your free account today';
+    }
+    function togglePwd(id, btn) {
+      const input = document.getElementById(id);
+      const isText = input.type === 'text';
+      input.type = isText ? 'password' : 'text';
+      btn.querySelector('i').className = isText ? 'fas fa-eye' : 'fas fa-eye-slash';
+    }
+    function doLogin() {
+      const email = document.getElementById('loginEmail').value;
+      const pass  = document.getElementById('loginPassword').value;
+      if (!email || !pass) { alert('Please fill in all fields.'); return; }
+      window.location.href = 'dashboard.html';
+    }
+    function doRegister() {
+      const terms = document.getElementById('termsCheck').checked;
+      if (!terms) { alert('Please agree to the Terms of Service.'); return; }
+      window.location.href = 'profile.html';
+    }
+  </script>
+</body>
+</html>

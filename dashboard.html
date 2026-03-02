@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Caretica — Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="app.css"/>
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><span>🌸</span><span>Caretica</span></div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item active"><i class="fas fa-home"></i> Dashboard</a>
+      <a href="profile.html"   class="nav-item"><i class="fas fa-baby"></i> Baby Profile</a>
+      <a href="growth.html"    class="nav-item"><i class="fas fa-chart-line"></i> Growth Tracking</a>
+      <a href="reminders.html" class="nav-item"><i class="fas fa-bell"></i> Reminders</a>
+      <a href="community.html" class="nav-item"><i class="fas fa-comments"></i> Community</a>
+    </nav>
+    <div class="sidebar-upgrade">
+      <div class="upgrade-card">
+        <i class="fas fa-crown"></i>
+        <p>Unlock Premium features</p>
+        <button class="btn-upgrade" onclick="showPremiumModal()">Upgrade Now</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="app-content">
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="topbar-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+        <span class="topbar-title">Dashboard</span>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn" title="Notifications">
+          <i class="fas fa-bell"></i>
+          <span class="notif-dot"></span>
+        </button>
+        <button class="icon-btn" title="Settings"><i class="fas fa-gear"></i></button>
+        <div class="user-avatar" title="Sarah M.">S</div>
+      </div>
+    </header>
+
+    <main class="main-content">
+
+      <!-- WELCOME BANNER -->
+      <div class="card mb-6" style="background: linear-gradient(135deg, #1D4ED8, #7C3AED); color: #fff; border-radius: 18px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+          <div>
+            <p style="opacity:0.8; font-size:0.85rem; font-weight:700;">Good morning 👋</p>
+            <h2 style="font-size:1.5rem; font-weight:900; margin:4px 0 8px;">Sarah & Baby Emma</h2>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <span style="background:rgba(255,255,255,0.2); padding:4px 12px; border-radius:50px; font-size:0.82rem; font-weight:700;">
+                <i class="fas fa-birthday-cake"></i> 8 months old
+              </span>
+              <span style="background:rgba(255,255,255,0.2); padding:4px 12px; border-radius:50px; font-size:0.82rem; font-weight:700;">
+                <i class="fas fa-calendar"></i> Monday, Mar 2, 2026
+              </span>
+            </div>
+          </div>
+          <div style="font-size:5rem; line-height:1;">👶</div>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-grid mb-6">
+        <div class="stat-card">
+          <div class="stat-icon blue"><i class="fas fa-weight-scale" style="color:#3B82F6"></i></div>
+          <div class="stat-info">
+            <strong>7.5 kg</strong>
+            <span>Weight</span>
+            <div class="stat-change up"><i class="fas fa-arrow-up"></i> +0.3 kg this month</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="fas fa-ruler-vertical" style="color:#10B981"></i></div>
+          <div class="stat-info">
+            <strong>68 cm</strong>
+            <span>Height</span>
+            <div class="stat-change up"><i class="fas fa-arrow-up"></i> +1.2 cm</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon yellow"><i class="fas fa-moon" style="color:#F59E0B"></i></div>
+          <div class="stat-info">
+            <strong>12.5 hrs</strong>
+            <span>Sleep Today</span>
+            <div class="stat-change up"><i class="fas fa-arrow-up"></i> On track</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple"><i class="fas fa-droplet" style="color:#7C3AED"></i></div>
+          <div class="stat-info">
+            <strong>6×</strong>
+            <span>Feedings Today</span>
+            <div class="stat-change up"><i class="fas fa-check"></i> Healthy</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2 mb-6">
+
+        <!-- TODAY'S REMINDERS -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title"><i class="fas fa-bell"></i> Today's Reminders</span>
+            <a href="reminders.html" style="font-size:0.82rem; font-weight:700; color:#3B82F6;">View all</a>
+          </div>
+          <div class="reminder-item">
+            <div class="reminder-icon" style="background:#FEF3C7"><i class="fas fa-syringe" style="color:#F59E0B"></i></div>
+            <div class="reminder-info">
+              <strong>8-Month Checkup</strong>
+              <span>Dr. Amara Johnson • Today 10:00 AM</span>
+            </div>
+            <span class="badge badge-blue">Soon</span>
+          </div>
+          <div class="reminder-item">
+            <div class="reminder-icon" style="background:#EFF6FF"><i class="fas fa-droplet" style="color:#3B82F6"></i></div>
+            <div class="reminder-info">
+              <strong>Feeding Time</strong>
+              <span>Formula • Every 3 hours</span>
+            </div>
+            <span class="badge badge-free">Free</span>
+          </div>
+          <div class="reminder-item">
+            <div class="reminder-icon" style="background:#F3E8FF"><i class="fas fa-pills" style="color:#7C3AED"></i></div>
+            <div class="reminder-info">
+              <strong>Vitamin D Drops</strong>
+              <span>400 IU daily • 8:00 AM</span>
+            </div>
+            <span class="badge badge-free">Free</span>
+          </div>
+          <div class="reminder-item">
+            <div class="reminder-icon" style="background:#ECFDF5"><i class="fas fa-shield-virus" style="color:#10B981"></i></div>
+            <div class="reminder-info">
+              <strong>MMR Vaccine</strong>
+              <span>Due in 4 months</span>
+            </div>
+            <span class="badge badge-blue">Upcoming</span>
+          </div>
+        </div>
+
+        <!-- RECENT ACTIVITY -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title"><i class="fas fa-clock-rotate-left"></i> Recent Activity</span>
+            <span class="badge badge-free">Free</span>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon" style="background:#EFF6FF">⚖️</div>
+            <div class="activity-info">
+              <strong>Weight Logged</strong>
+              <span>Today, 8:30 AM</span>
+            </div>
+            <span class="activity-value">7.5 kg</span>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon" style="background:#ECFDF5">🍼</div>
+            <div class="activity-info">
+              <strong>Feeding Logged</strong>
+              <span>Today, 7:00 AM</span>
+            </div>
+            <span class="activity-value">150 ml</span>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon" style="background:#FEF3C7">😴</div>
+            <div class="activity-info">
+              <strong>Sleep Logged</strong>
+              <span>Yesterday, 8:00 PM</span>
+            </div>
+            <span class="activity-value">9.5 hrs</span>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon" style="background:#F3E8FF">📏</div>
+            <div class="activity-info">
+              <strong>Height Logged</strong>
+              <span>Mar 1, 2026</span>
+            </div>
+            <span class="activity-value">68 cm</span>
+          </div>
+          <div class="activity-item">
+            <div class="activity-icon" style="background:#FEE2E2">📋</div>
+            <div class="activity-info">
+              <strong>Medical Record Uploaded</strong>
+              <span>Feb 28, 2026</span>
+            </div>
+            <span class="activity-value badge badge-premium"><i class="fas fa-crown"></i> Premium</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUICK ACTIONS -->
+      <div class="card mb-6">
+        <div class="card-header">
+          <span class="card-title"><i class="fas fa-bolt"></i> Quick Actions</span>
+        </div>
+        <div class="action-grid">
+          <button class="action-btn" onclick="showLogModal('weight')">
+            <div class="action-icon" style="background:#EFF6FF">⚖️</div>
+            <span>Log Weight</span>
+            <span class="badge badge-free">Free</span>
+          </button>
+          <button class="action-btn" onclick="showLogModal('height')">
+            <div class="action-icon" style="background:#ECFDF5">📏</div>
+            <span>Log Height</span>
+            <span class="badge badge-free">Free</span>
+          </button>
+          <button class="action-btn" onclick="showLogModal('sleep')">
+            <div class="action-icon" style="background:#FEF3C7">😴</div>
+            <span>Log Sleep</span>
+            <span class="badge badge-free">Free</span>
+          </button>
+          <button class="action-btn" onclick="showLogModal('feeding')">
+            <div class="action-icon" style="background:#F3E8FF">🍼</div>
+            <span>Log Feeding</span>
+            <span class="badge badge-free">Free</span>
+          </button>
+          <button class="action-btn" onclick="showPremiumModal()">
+            <div class="action-icon" style="background:#FEF3C7">📂</div>
+            <span>Upload Records</span>
+            <span class="badge badge-premium"><i class="fas fa-crown"></i> Premium</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- GROWTH SUMMARY -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title"><i class="fas fa-chart-line"></i> Growth Summary</span>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <span class="badge badge-premium"><i class="fas fa-crown"></i> Full charts in Premium</span>
+            <a href="growth.html" style="font-size:0.82rem; font-weight:700; color:#3B82F6;">View details</a>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+              <span style="font-size:0.85rem; font-weight:700;">Weight Progress</span>
+              <span style="font-size:0.85rem; color:#64748B;">50th percentile</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill green" style="width:50%"></div></div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+              <span style="font-size:0.85rem; font-weight:700;">Height Progress</span>
+              <span style="font-size:0.85rem; color:#64748B;">60th percentile</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- LOG MODAL -->
+<div class="modal-overlay" id="logModal">
+  <div class="modal" style="width:400px;">
+    <div class="modal-header">
+      <button class="modal-close" onclick="hideLogModal()"><i class="fas fa-times"></i></button>
+      <i class="fas fa-pen" id="logIcon"></i>
+      <h2 id="logTitle">Log Entry</h2>
+      <p id="logSubtitle">Enter the details below</p>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label" id="logLabel">Value</label>
+        <input type="number" class="form-control" id="logValue" placeholder="Enter value"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Date & Time</label>
+        <input type="datetime-local" class="form-control" id="logDate"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes (optional)</label>
+        <textarea class="form-control" rows="2" placeholder="Any notes..."></textarea>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="saveLog()"><i class="fas fa-save"></i> Save Entry</button>
+    </div>
+  </div>
+</div>
+
+<!-- PREMIUM MODAL -->
+<div class="modal-overlay" id="premiumModal">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-close" onclick="hidePremiumModal()"><i class="fas fa-times"></i></button>
+      <i class="fas fa-crown"></i>
+      <h2>Upgrade to Premium</h2>
+      <p>Unlock all features for complete care</p>
+    </div>
+    <div class="modal-body">
+      <table class="feature-table">
+        <thead>
+          <tr><th>Feature</th><th>Free</th><th>Premium</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Basic tracking (weight, height, sleep)</td><td><i class="fas fa-check check-yes"></i></td><td><i class="fas fa-check check-yes"></i></td></tr>
+          <tr><td>Daily reminders</td><td><i class="fas fa-check check-yes"></i></td><td><i class="fas fa-check check-yes"></i></td></tr>
+          <tr><td>Smart growth analysis</td><td><i class="fas fa-times check-no"></i></td><td><i class="fas fa-crown check-premium"></i></td></tr>
+          <tr><td>Medical records upload (OCR)</td><td><i class="fas fa-times check-no"></i></td><td><i class="fas fa-crown check-premium"></i></td></tr>
+          <tr><td>PDF report export</td><td><i class="fas fa-times check-no"></i></td><td><i class="fas fa-crown check-premium"></i></td></tr>
+          <tr><td>Priority AI Q&A</td><td><i class="fas fa-times check-no"></i></td><td><i class="fas fa-crown check-premium"></i></td></tr>
+          <tr><td>Custom reminders & frequency</td><td><i class="fas fa-times check-no"></i></td><td><i class="fas fa-crown check-premium"></i></td></tr>
+          <tr><td>Unlimited care team members</td><td><i class="fas fa-times check-no"></i></td><td><i class="fas fa-crown check-premium"></i></td></tr>
+        </tbody>
+      </table>
+      <div class="price-box">
+        <div class="price">$9.99 <span>/ month</span></div>
+        <p>Or $89.99/year — save 25%</p>
+      </div>
+      <button class="btn btn-premium btn-block mb-4" onclick="alert('Redirecting to payment...')">
+        <i class="fas fa-crown"></i> Subscribe to Premium
+      </button>
+      <div class="trust-badges">
+        <div class="trust-badge"><i class="fas fa-shield-alt"></i> Secure Payment</div>
+        <div class="trust-badge"><i class="fas fa-undo"></i> 30-day Refund</div>
+        <div class="trust-badge"><i class="fas fa-times-circle"></i> Cancel Anytime</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

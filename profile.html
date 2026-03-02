@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Caretica — Baby Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="app.css"/>
+</head>
+<body>
+<div class="app-layout">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><span>🌸</span><span>Caretica</span></div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+      <a href="profile.html"   class="nav-item active"><i class="fas fa-baby"></i> Baby Profile</a>
+      <a href="growth.html"    class="nav-item"><i class="fas fa-chart-line"></i> Growth Tracking</a>
+      <a href="reminders.html" class="nav-item"><i class="fas fa-bell"></i> Reminders</a>
+      <a href="community.html" class="nav-item"><i class="fas fa-comments"></i> Community</a>
+    </nav>
+    <div class="sidebar-upgrade">
+      <div class="upgrade-card">
+        <i class="fas fa-crown"></i>
+        <p>Unlock Premium features</p>
+        <button class="btn-upgrade" onclick="showPremiumModal()">Upgrade Now</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="app-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="topbar-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+        <span class="topbar-title">Baby Profile</span>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn"><i class="fas fa-bell"></i><span class="notif-dot"></span></button>
+        <div class="user-avatar">S</div>
+      </div>
+    </header>
+
+    <main class="main-content">
+
+      <div class="grid-2 mb-6">
+
+        <!-- BABY INFO CARD -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title"><i class="fas fa-baby"></i> Baby Information</span>
+            <button class="btn btn-secondary btn-sm" id="editBtn" onclick="toggleEdit()">
+              <i class="fas fa-pen"></i> Edit
+            </button>
+          </div>
+
+          <div style="display:flex; flex-direction:column; align-items:center; margin-bottom:24px;">
+            <div id="photoDisplay" style="width:100px; height:100px; border-radius:50%; background:linear-gradient(135deg,#BFDBFE,#C4B5FD); display:flex; align-items:center; justify-content:center; font-size:3rem; margin-bottom:12px; cursor:pointer; position:relative; overflow:hidden;" onclick="document.getElementById('photoInput').click()">
+              👶
+              <div style="position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.4); padding:4px; text-align:center; font-size:0.6rem; color:#fff; font-weight:700;">Change</div>
+            </div>
+            <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="changePhoto(this)"/>
+            <span style="font-size:0.78rem; color:#64748B;">Tap to change photo</span>
+          </div>
+
+          <div id="viewMode">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+              <div>
+                <div style="font-size:0.78rem; font-weight:700; color:#94A3B8; margin-bottom:2px;">FIRST NAME</div>
+                <div style="font-weight:800; color:#1E3A5F;">Emma</div>
+              </div>
+              <div>
+                <div style="font-size:0.78rem; font-weight:700; color:#94A3B8; margin-bottom:2px;">LAST NAME</div>
+                <div style="font-weight:800; color:#1E3A5F;">Martinez</div>
+              </div>
+              <div>
+                <div style="font-size:0.78rem; font-weight:700; color:#94A3B8; margin-bottom:2px;">DATE OF BIRTH</div>
+                <div style="font-weight:800; color:#1E3A5F;">July 2, 2025</div>
+              </div>
+              <div>
+                <div style="font-size:0.78rem; font-weight:700; color:#94A3B8; margin-bottom:2px;">GENDER</div>
+                <div style="font-weight:800; color:#1E3A5F;">Female 👧</div>
+              </div>
+              <div>
+                <div style="font-size:0.78rem; font-weight:700; color:#94A3B8; margin-bottom:2px;">BLOOD TYPE</div>
+                <div style="font-weight:800; color:#1E3A5F;">A+</div>
+              </div>
+              <div>
+                <div style="font-size:0.78rem; font-weight:700; color:#94A3B8; margin-bottom:2px;">PEDIATRICIAN</div>
+                <div style="font-weight:800; color:#1E3A5F;">Dr. Amara J.</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="editMode" style="display:none;">
+            <div class="form-group">
+              <label class="form-label">First Name</label>
+              <input type="text" class="form-control" value="Emma"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Last Name</label>
+              <input type="text" class="form-control" value="Martinez"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date of Birth</label>
+              <input type="date" class="form-control" value="2025-07-02"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Gender</label>
+              <select class="form-control">
+                <option selected>Female</option>
+                <option>Male</option>
+                <option>Prefer not to say</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Blood Type</label>
+              <select class="form-control">
+                <option selected>A+</option>
+                <option>A-</option><option>B+</option><option>B-</option>
+                <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Pediatrician Name</label>
+              <input type="text" class="form-control" value="Dr. Amara Johnson"/>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:8px;">
+              <button class="btn btn-primary btn-sm" onclick="saveProfile()"><i class="fas fa-save"></i> Save</button>
+              <button class="btn btn-ghost btn-sm" onclick="toggleEdit()">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- GROWTH SUMMARY -->
+        <div style="display:flex; flex-direction:column; gap:20px;">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title"><i class="fas fa-chart-bar"></i> Growth Summary</span>
+              <a href="growth.html" style="font-size:0.82rem; font-weight:700; color:#3B82F6;">Full charts →</a>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+              <div style="background:#EFF6FF; border-radius:12px; padding:16px; text-align:center;">
+                <div style="font-size:1.8rem; font-weight:900; color:#1D4ED8;">7.5</div>
+                <div style="font-size:0.72rem; font-weight:700; color:#64748B;">kg — Weight</div>
+                <div style="font-size:0.72rem; color:#3B82F6; margin-top:4px; font-weight:700;">50th percentile</div>
+              </div>
+              <div style="background:#ECFDF5; border-radius:12px; padding:16px; text-align:center;">
+                <div style="font-size:1.8rem; font-weight:900; color:#065F46;">68</div>
+                <div style="font-size:0.72rem; font-weight:700; color:#64748B;">cm — Height</div>
+                <div style="font-size:0.72rem; color:#10B981; margin-top:4px; font-weight:700;">60th percentile</div>
+              </div>
+              <div style="background:#F3E8FF; border-radius:12px; padding:16px; text-align:center;">
+                <div style="font-size:1.8rem; font-weight:900; color:#6D28D9;">36.8</div>
+                <div style="font-size:0.72rem; font-weight:700; color:#64748B;">°C — Temp</div>
+                <div style="font-size:0.72rem; color:#7C3AED; margin-top:4px; font-weight:700;">Normal</div>
+              </div>
+              <div style="background:#FEF3C7; border-radius:12px; padding:16px; text-align:center;">
+                <div style="font-size:1.8rem; font-weight:900; color:#92400E;">8</div>
+                <div style="font-size:0.72rem; font-weight:700; color:#64748B;">months old</div>
+                <div style="font-size:0.72rem; color:#F59E0B; margin-top:4px; font-weight:700;">On track ✓</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI INSIGHTS -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title"><i class="fas fa-robot"></i> AI Insights</span>
+              <span class="badge badge-premium"><i class="fas fa-crown"></i> Premium</span>
+            </div>
+            <div class="premium-lock" style="height:120px; background:#F8FBFF; border-radius:10px;">
+              <div class="premium-overlay">
+                <i class="fas fa-lock"></i>
+                <p>Upgrade to see AI-powered health insights</p>
+                <button class="btn btn-premium btn-sm" onclick="showPremiumModal()"><i class="fas fa-crown"></i> Upgrade</button>
+              </div>
+            </div>
+            <p style="font-size:0.75rem; color:#94A3B8; margin-top:10px;"><i class="fas fa-info-circle"></i> AI insights are educational only — not medical advice.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- MEDICAL RECORDS -->
+      <div class="card mb-6">
+        <div class="card-header">
+          <span class="card-title"><i class="fas fa-file-medical"></i> Medical Records</span>
+          <span class="badge badge-premium"><i class="fas fa-crown"></i> Premium</span>
+        </div>
+        <div class="grid-2">
+          <div>
+            <div class="upload-area" onclick="showPremiumModal()">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <p>Upload Vaccine Card</p>
+              <span>AI will auto-read and structure your records</span>
+            </div>
+          </div>
+          <div>
+            <div class="upload-area" onclick="showPremiumModal()">
+              <i class="fas fa-file-alt"></i>
+              <p>Upload Checkup Report</p>
+              <span>PDF, JPG, PNG supported • OCR powered</span>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:16px; padding:12px 16px; background:#FEF3C7; border-radius:10px; display:flex; align-items:center; gap:10px;">
+          <i class="fas fa-info-circle" style="color:#F59E0B;"></i>
+          <span style="font-size:0.82rem; color:#92400E; font-weight:600;">Medical record upload and OCR reading requires a Premium subscription. Your records are encrypted and private.</span>
+        </div>
+      </div>
+
+      <!-- VACCINE TIMELINE (free preview) -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title"><i class="fas fa-syringe"></i> Vaccine Timeline</span>
+          <span class="badge badge-free">Free</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:0;">
+          <div style="display:flex; gap:16px; align-items:flex-start; padding-bottom:20px; position:relative;">
+            <div style="display:flex; flex-direction:column; align-items:center; gap:0;">
+              <div style="width:36px; height:36px; border-radius:50%; background:#10B981; display:flex; align-items:center; justify-content:center; color:#fff; font-size:0.9rem;"><i class="fas fa-check"></i></div>
+              <div style="width:2px; flex:1; background:#E2EBF6; min-height:20px; margin-top:4px;"></div>
+            </div>
+            <div style="padding-top:6px;">
+              <strong style="font-size:0.92rem;">HepB — Birth</strong>
+              <div style="font-size:0.8rem; color:#64748B;">Administered July 2, 2025 ✓</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:16px; align-items:flex-start; padding-bottom:20px;">
+            <div style="display:flex; flex-direction:column; align-items:center; gap:0;">
+              <div style="width:36px; height:36px; border-radius:50%; background:#10B981; display:flex; align-items:center; justify-content:center; color:#fff; font-size:0.9rem;"><i class="fas fa-check"></i></div>
+              <div style="width:2px; flex:1; background:#E2EBF6; min-height:20px; margin-top:4px;"></div>
+            </div>
+            <div style="padding-top:6px;">
+              <strong style="font-size:0.92rem;">DTaP, IPV, Hib, PCV — 2 months</strong>
+              <div style="font-size:0.8rem; color:#64748B;">Administered Sep 2, 2025 ✓</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:16px; align-items:flex-start;">
+            <div style="width:36px; height:36px; border-radius:50%; background:#BFDBFE; display:flex; align-items:center; justify-content:center; color:#1D4ED8; font-size:0.9rem; flex-shrink:0;"><i class="fas fa-clock"></i></div>
+            <div style="padding-top:6px;">
+              <strong style="font-size:0.92rem;">MMR, Varicella — 12 months</strong>
+              <div style="font-size:0.8rem; color:#64748B;">Due July 2, 2026</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- PREMIUM MODAL -->
+<div class="modal-overlay" id="premiumModal">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-close" onclick="hidePremiumModal()"><i class="fas fa-times"></i></button>
+      <i class="fas fa-crown"></i>
+      <h2>Upgrade to Premium</h2>
+      <p>Unlock all features for complete care</p>
+    </div>
+    <div class="modal-body">
+      <table class="feature-table">
+        <thead><tr><th>Feature</th><th>Free</th><th>Premium</th></tr></thead>
+        <tbody>
+          <tr><td>Basic tracking</td><td><i class="fas fa-check check-yes"></i></td><td><i class="fas fa-check check-yes"></i></td></tr>
+          <tr><td>Medical records upload (OCR)</td><td><i class="fas fa-times check-no"></i></td><td><i class="fas fa-crown check-premium"></i></td></tr>
+          <tr><td>AI health insights</td><td><i class="fas fa-times check-no"></i></td><td><i class="fas fa-crown check-premium"></i></td></tr>
+          <tr><td>PDF report export</td><td><i class="fas fa-times check-no"></i></td><td><i class="fas fa-crown check-premium"></i></td></tr>
+          <tr><td>Unlimited care team</td><td><i class="fas fa-times check-no"></i></td><td><i class="fas fa-crown check-premium"></i></td></tr>
+        </tbody>
+      </table>
+      <div class="price-box">
+        <div class="price">$9.99 <span>/ month</span></div>
+        <p>Or $89.99/year — save 25%</p>
+      </div>
+      <button class="btn btn-premium btn-block mb-4"><i class="fas fa-crown"></i> Subscribe to Premium</button>
+      <div class="trust-badges">
+        <div class="trust-badge"><i class="fas fa-shield-alt"></i> Secure Payment</div>
+        <div class="trust-badge"><i class="fas fa-undo"></i> 30-day Refund</div>
+        <div class="trust-badge"><i class="fas fa-times-circle"></i> Cancel Anytime</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  function toggleEdit() {
+    const edit = document.getElementById('editMode');
+    const view = document.getElementById('viewMode');
+    const btn  = document.getElementById('editBtn');
+    const isEditing = edit.style.display !== 'none';
+    edit.style.display = isEditing ? 'none' : 'block';
+    view.style.display = isEditing ? 'block' : 'none';
+    btn.innerHTML = isEditing ? '<i class="fas fa-pen"></i> Edit' : '<i class="fas fa-times"></i> Cancel';
+  }
+  function saveProfile() {
+    toggleEdit();
+    alert('Profile saved successfully!');
+  }
+  function changePhoto(input) {
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const div = document.getElementById('photoDisplay');
+        div.style.backgroundImage = `url(${e.target.result})`;
+        div.style.backgroundSize = 'cover';
+        div.style.backgroundPosition = 'center';
+        div.textContent = '';
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+</script>
+</body>
+</html>

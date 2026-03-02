@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Caretica — Reminders</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="app.css"/>
+</head>
+<body>
+<div class="app-layout">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><span>🌸</span><span>Caretica</span></div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+      <a href="profile.html"   class="nav-item"><i class="fas fa-baby"></i> Baby Profile</a>
+      <a href="growth.html"    class="nav-item"><i class="fas fa-chart-line"></i> Growth Tracking</a>
+      <a href="reminders.html" class="nav-item active"><i class="fas fa-bell"></i> Reminders</a>
+      <a href="community.html" class="nav-item"><i class="fas fa-comments"></i> Community</a>
+    </nav>
+    <div class="sidebar-upgrade">
+      <div class="upgrade-card">
+        <i class="fas fa-crown"></i>
+        <p>Unlock Premium features</p>
+        <button class="btn-upgrade" onclick="showPremiumModal()">Upgrade Now</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="app-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="topbar-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+        <span class="topbar-title">Reminders</span>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-primary btn-sm" onclick="showAddModal()">
+          <i class="fas fa-plus"></i> Add Reminder
+        </button>
+        <button class="icon-btn"><i class="fas fa-bell"></i><span class="notif-dot"></span></button>
+        <div class="user-avatar">S</div>
+      </div>
+    </header>
+
+    <main class="main-content">
+
+      <!-- SUMMARY STATS -->
+      <div class="stats-grid mb-6">
+        <div class="stat-card">
+          <div class="stat-icon blue"><i class="fas fa-bell" style="color:#3B82F6"></i></div>
+          <div class="stat-info"><strong>12</strong><span>Total Reminders</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon yellow"><i class="fas fa-clock" style="color:#F59E0B"></i></div>
+          <div class="stat-info"><strong>3</strong><span>Due Today</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="fas fa-check-circle" style="color:#10B981"></i></div>
+          <div class="stat-info"><strong>8</strong><span>Completed</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon purple"><i class="fas fa-syringe" style="color:#7C3AED"></i></div>
+          <div class="stat-info"><strong>2</strong><span>Upcoming Vaccines</span></div>
+        </div>
+      </div>
+
+      <!-- FILTER TABS -->
+      <div class="tabs mb-6">
+        <button class="tab-btn active" onclick="filterReminders('all', this)">All</button>
+        <button class="tab-btn" onclick="filterReminders('vaccine', this)">💉 Vaccines</button>
+        <button class="tab-btn" onclick="filterReminders('checkup', this)">🩺 Checkups</button>
+        <button class="tab-btn" onclick="filterReminders('feeding', this)">🍼 Feeding</button>
+        <button class="tab-btn" onclick="filterReminders('medication', this)">💊 Medication</button>
+      </div>
+
+      <div class="grid-2">
+
+        <!-- REMINDERS LIST -->
+        <div style="grid-column: 1 / -1;">
+          <div class="card mb-6">
+            <div class="card-header">
+              <span class="card-title"><i class="fas fa-calendar-day"></i> Today — March 2, 2026</span>
+              <span class="badge badge-blue">3 due</span>
+            </div>
+
+            <div class="reminder-row" data-type="checkup">
+              <div style="display:flex; align-items:center; gap:14px; padding:14px; background:#FEF3C7; border-radius:12px; margin-bottom:10px;">
+                <div style="width:44px;height:44px;background:#FBBF24;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🩺</div>
+                <div style="flex:1;">
+                  <div style="font-weight:800;font-size:0.95rem;">8-Month Pediatric Checkup</div>
+                  <div style="font-size:0.8rem;color:#64748B;">Dr. Amara Johnson • City Hospital • 10:00 AM</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <span class="badge" style="background:#FEF3C7;color:#92400E;">Today</span>
+                  <label class="toggle"><input type="checkbox" checked onchange="toggleReminder(this)"><span class="toggle-slider"></span></label>
+                </div>
+              </div>
+            </div>
+
+            <div class="reminder-row" data-type="feeding">
+              <div style="display:flex; align-items:center; gap:14px; padding:14px; border:1px solid #E2EBF6; border-radius:12px; margin-bottom:10px;">
+                <div style="width:44px;height:44px;background:#EFF6FF;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🍼</div>
+                <div style="flex:1;">
+                  <div style="font-weight:800;font-size:0.95rem;">Feeding — Formula</div>
+                  <div style="font-size:0.8rem;color:#64748B;">Every 3 hours • 150 ml per feed</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <span class="badge badge-free">Free</span>
+                  <label class="toggle"><input type="checkbox" checked onchange="toggleReminder(this)"><span class="toggle-slider"></span></label>
+                </div>
+              </div>
+            </div>
+
+            <div class="reminder-row" data-type="medication">
+              <div style="display:flex; align-items:center; gap:14px; padding:14px; border:1px solid #E2EBF6; border-radius:12px; margin-bottom:10px;">
+                <div style="width:44px;height:44px;background:#F3E8FF;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">💊</div>
+                <div style="flex:1;">
+                  <div style="font-weight:800;font-size:0.95rem;">Vitamin D Drops</div>
+                  <div style="font-size:0.8rem;color:#64748B;">400 IU • Daily at 8:00 AM</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <span class="badge badge-free">Free</span>
+                  <label class="toggle"><input type="checkbox" checked onchange="toggleReminder(this)"><span class="toggle-slider"></span></label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mb-6">
+            <div class="card-header">
+              <span class="card-title"><i class="fas fa-calendar-week"></i> Upcoming This Month</span>
+              <span class="badge badge-blue">4 upcoming</span>
+            </div>
+
+            <div class="reminder-row" data-type="checkup">
+              <div style="display:flex; align-items:center; gap:14px; padding:14px; border:1px solid #E2EBF6; border-radius:12px; margin-bottom:10px;">
+                <div style="width:44px;height:44px;background:#ECFDF5;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">📋</div>
+                <div style="flex:1;">
+                  <div style="font-weight:800;font-size:0.95rem;">Follow-up Weight Check</div>
+                  <div style="font-size:0.8rem;color:#64748B;">March 10, 2026 • 9:00 AM</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <span class="badge badge-free">Free</span>
+                  <label class="toggle"><input type="checkbox" checked onchange="toggleReminder(this)"><span class="toggle-slider"></span></label>
+                </div>
+              </div>
+            </div>
+
+            <div class="reminder-row" data-type="vaccine">
+              <div style="display:flex; align-items:center; gap:14px; padding:14px; border:1px solid #E2EBF6; border-radius:12px; margin-bottom:10px;">
+                <div style="width:44px;height:44px;background:#FEE2E2;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">💉</div>
+                <div style="flex:1;">
+                  <div style="font-weight:800;font-size:0.95rem;">Flu Vaccine (Annual)</div>
+                  <div style="font-size:0.8rem;color:#64748B;">March 18, 2026 • Dr. Johnson</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <span class="badge badge-free">Free</span>
+                  <label class="toggle"><input type="checkbox" checked onchange="toggleReminder(this)"><span class="toggle-slider"></span></label>
+                </div>
+              </div>
+            </div>
+
+            <div class="reminder-row" data-type="checkup">
+              <div style="display:flex; align-items:center; gap:14px; padding:14px; border:1px solid #E2EBF6; border-radius:12px; margin-bottom:10px;">
+                <div style="width:44px;height:44px;background:#EFF6FF;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">👁️</div>
+                <div style="flex:1;">
+                  <div style="font-weight:800;font-size:0.95rem;">Eye Development Check</div>
+                  <div style="font-size:0.8rem;color:#64748B;">March 25, 2026 • Eye specialist</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <span class="badge badge-free">Free</span>
+                  <label class="toggle"><input type="checkbox" onchange="toggleReminder(this)"><span class="toggle-slider"></span></label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PREMIUM: CUSTOM NOTIFICATIONS -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title"><i class="fas fa-sliders"></i> Custom Notification Settings</span>
+              <span class="badge badge-premium"><i class="fas fa-crown"></i> Premium</span>
+            </div>
+            <div class="premium-lock">
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; filter:blur(3px); pointer-events:none; padding:8px 0;">
+                <div style="border:1px solid #E2EBF6; border-radius:10px; padding:16px;">
+                  <div style="font-weight:700; margin-bottom:8px;">Notification Frequency</div>
+                  <select style="width:100%;padding:8px;border:1px solid #E2EBF6;border-radius:6px;">
+                    <option>1 day before</option>
+                  </select>
+                </div>
+                <div style="border:1px solid #E2EBF6; border-radius:10px; padding:16px;">
+                  <div style="font-weight:700; margin-bottom:8px;">Delivery Channel</div>
+                  <select style="width:100%;padding:8px;border:1px solid #E2EBF6;border-radius:6px;">
+                    <option>Push + Email + SMS</option>
+                  </select>
+                </div>
+              </div>
+              <div class="premium-overlay">
+                <i class="fas fa-lock"></i>
+                <p>Customize notifications with Premium</p>
+                <button class="btn btn-premium btn-sm" onclick="showPremiumModal()"><i class="fas fa-crown"></i> Upgrade</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ADD REMINDER MODAL -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal" style="width:440px;">
+    <div class="modal-header">
+      <button class="modal-close" onclick="hideAddModal()"><i class="fas fa-times"></i></button>
+      <i class="fas fa-bell"></i>
+      <h2>Add Reminder</h2>
+      <p>Set up a new health reminder</p>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Reminder Type</label>
+        <select class="form-control">
+          <option>🩺 Checkup</option>
+          <option>💉 Vaccine</option>
+          <option>🍼 Feeding</option>
+          <option>💊 Medication</option>
+          <option>📋 Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Title</label>
+        <input type="text" class="form-control" placeholder="e.g., 9-Month Checkup"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Date & Time</label>
+        <input type="datetime-local" class="form-control"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes (optional)</label>
+        <textarea class="form-control" rows="2" placeholder="Doctor's name, location, instructions..."></textarea>
+      </div>
+      <div class="toggle-wrap mb-4">
+        <span style="font-size:0.9rem; font-weight:700;">Enable notification</span>
+        <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="hideAddModal(); alert('Reminder added!')">
+        <i class="fas fa-plus"></i> Add Reminder
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- PREMIUM MODAL -->
+<div class="modal-overlay" id="premiumModal">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-close" onclick="hidePremiumModal()"><i class="fas fa-times"></i></button>
+      <i class="fas fa-crown"></i>
+      <h2>Upgrade to Premium</h2>
+      <p>Custom reminders & notifications</p>
+    </div>
+    <div class="modal-body">
+      <table class="feature-table">
+        <thead><tr><th>Feature</th><th>Free</th><th>Premium</th></tr></thead>
+        <tbody>
+          <tr><td>Standard reminders</td><td><i class="fas fa-check check-yes"></i></td><td><i class="fas fa-check check-yes"></i></td></tr>
+          <tr><td>Custom notification frequency</td><td><i class="fas fa-times check-no"></i></td><td><i class="fas fa-crown check-premium"></i></td></tr>
+          <tr><td>SMS + Email + Push alerts</td><td><i class="fas fa-times check-no"></i></td><td><i class="fas fa-crown check-premium"></i></td></tr>
+          <tr><td>Recurring smart reminders</td><td><i class="fas fa-times check-no"></i></td><td><i class="fas fa-crown check-premium"></i></td></tr>
+        </tbody>
+      </table>
+      <div class="price-box">
+        <div class="price">$9.99 <span>/ month</span></div>
+        <p>Or $89.99/year — save 25%</p>
+      </div>
+      <button class="btn btn-premium btn-block mb-4"><i class="fas fa-crown"></i> Subscribe to Premium</button>
+      <div class="trust-badges">
+        <div class="trust-badge"><i class="fas fa-shield-alt"></i> Secure Payment</div>
+        <div class="trust-badge"><i class="fas fa-undo"></i> 30-day Refund</div>
+        <div class="trust-badge"><i class="fas fa-times-circle"></i> Cancel Anytime</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  function showAddModal() { document.getElementById('addModal').classList.add('open'); }
+  function hideAddModal() { document.getElementById('addModal').classList.remove('open'); }
+  function filterReminders(type, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.reminder-row').forEach(row => {
+      row.style.display = (type === 'all' || row.dataset.type === type) ? 'block' : 'none';
+    });
+  }
+  function toggleReminder(cb) {
+    const row = cb.closest('[style]');
+    if (row) row.style.opacity = cb.checked ? '1' : '0.5';
+  }
+</script>
+</body>
+</html>

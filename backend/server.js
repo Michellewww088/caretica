@@ -15,6 +15,8 @@ const path        = require('path');
 const { stmts }   = require('./database');
 const remindersRouter = require('./routes/reminders');
 const uploadRouter    = require('./routes/upload');
+const authRouter      = require('./routes/auth');
+const stripeRouter    = require('./routes/stripe');
 const { startScheduler } = require('./scheduler');
 
 const app  = express();
@@ -36,8 +38,11 @@ app.use(express.static(path.join(__dirname, '..')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ── ROUTES ──
+app.use('/api/auth',      authRouter);
+app.use('/api/stripe',    stripeRouter);
 app.use('/api/reminders', remindersRouter);
 app.use('/api/upload',    uploadRouter);
+app.use('/api/who',       require('./routes/who-api'));
 
 // Growth logs
 app.get('/api/growth', (req, res) => {

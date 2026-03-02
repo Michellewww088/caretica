@@ -10,6 +10,22 @@ db.pragma('journal_mode = WAL');
 
 // ── SCHEMA ──
 db.exec(`
+  -- ── USERS TABLE ──
+  CREATE TABLE IF NOT EXISTS users (
+    id                     INTEGER PRIMARY KEY AUTOINCREMENT,
+    email                  TEXT    NOT NULL UNIQUE,
+    password_hash          TEXT    NOT NULL,
+    name                   TEXT,
+    subscription_status    TEXT    NOT NULL DEFAULT 'trialing',
+    trial_start_date       TEXT,
+    trial_end_date         TEXT,
+    stripe_customer_id     TEXT,
+    stripe_subscription_id TEXT,
+    subscription_expiry    TEXT,
+    is_premium             INTEGER NOT NULL DEFAULT 1,
+    created_at             TEXT    NOT NULL DEFAULT (datetime('now'))
+  );
+
   CREATE TABLE IF NOT EXISTS reminders (
     id                  INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id             TEXT    NOT NULL DEFAULT 'user1',

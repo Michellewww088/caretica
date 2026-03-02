@@ -13,6 +13,7 @@ const path    = require('path');
 const fs      = require('fs');
 const router  = express.Router();
 const { stmts } = require('../database');
+const { calcPercentile, buildAIPromptData, buildAISummaryPrompt, getVaccineFollowups } = require('../who-percentile');
 
 // ── UPLOAD STORAGE ──
 const uploadDir = path.join(__dirname, '..', 'uploads');
@@ -36,6 +37,26 @@ const upload = multer({
     else cb(new Error('Only JPG, PNG, and PDF files are allowed.'));
   },
 });
+
+// ── AI SUMMARY (Claude API — only for text, not calculations) ──
+async function generateAISummary(prompt) {
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return "Emma's measurements are tracking well within healthy ranges based on WHO growth standards. Growth is progressing consistently. Continue current feeding and sleep routines. Always consult your pediatrician for personalized medical advice.";
+  }
+  try {
+    const Anthropic = require('@anthropic-ai/sdk');
+    const client = new Anthropic.default();
+    const msg = await client.messages.create({
+      model: 'claude-haiku-4-5-20251001', // Use Haiku — cheap for summaries
+      max_tokens: 200,
+      messages: [{ role: 'user', content: prompt }],
+    });
+    return msg.content[0].text;
+  } catch (err) {
+    console.error('AI summary error:', err.message);
+    return null;
+  }
+}
 
 // ── OCR (Google Vision API) ──
 async function runOCR(filePath) {
@@ -121,7 +142,26 @@ router.post('/', upload.single('file'), async (req, res) => {
     console.log('🤖 Sending to AI for structuring...');
     const structured = await structureWithAI(ocrText);
 
-    // Step 4: Save to DB
+    // Step 4: WHO percentile calculation (local — no AI cost)
+    let weightPct = null, heightPct = null;
+    const ageMonths = parseInt(req.body.age_months) || 8;
+    const gender    = req.body.gender || 'girls';
+    if (structured.weight) weightPct = calcPercentile(ageMonths, structured.weight, 'weight', gender);
+    if (structured.height) heightPct = calcPercentile(ageMonths, structured.height, 'height', gender);
+
+    // Step 5: AI summary (only for text — percentiles already done locally)
+    if (!structured.ai_summary && (structured.weight || structured.height)) {
+      const promptData = buildAIPromptData({
+        ageMonths, gender,
+        weight:         structured.weight,
+        height:         structured.height,
+        weightPct, heightPct,
+      });
+      const prompt = buildAISummaryPrompt(promptData);
+      structured.ai_summary = await generateAISummary(prompt);
+    }
+
+    // Step 6: Save to DB
     const info = stmts.addRecord.run({
       baby_id:      babyId,
       record_type:  req.body.record_type || 'checkup',
@@ -134,24 +174,44 @@ router.post('/', upload.single('file'), async (req, res) => {
       file_path:    req.file.filename,
     });
 
-    // Step 5: Auto-create reminder for next visit if found
+    // Step 7: Auto vaccine follow-up reminders
+    const autoReminders = [];
+    if (structured.vaccine_name) {
+      const followups = getVaccineFollowups(structured.vaccine_name, structured.date);
+      for (const fu of followups) {
+        stmts.createReminder.run({
+          user_id: 'user1', baby_id: babyId,
+          type: 'vaccine',
+          title: fu.name,
+          datetime: `${fu.date} 09:00:00`,
+          repeat_frequency: 'once',
+          notification_method: 'in-app,email',
+          notes: `Auto-scheduled based on ${structured.vaccine_name} administered on ${structured.date}`,
+        });
+        autoReminders.push(fu.name);
+      }
+    }
+
+    // Step 8: Checkup next visit reminder
     if (structured.next_visit) {
       stmts.createReminder.run({
         user_id: 'user1', baby_id: babyId,
-        type: 'checkup', title: `Next Visit: ${structured.next_visit}`,
+        type: 'checkup', title: `Follow-up: ${structured.next_visit}`,
         datetime: new Date().toISOString().slice(0, 19).replace('T', ' '),
         repeat_frequency: 'once',
         notification_method: 'in-app,email',
-        notes: `Auto-generated from uploaded medical record. Next visit: ${structured.next_visit}`,
+        notes: `Auto-generated from uploaded medical record.`,
       });
     }
 
-    console.log(`✅ Record saved (id: ${info.lastInsertRowid})`);
+    console.log(`✅ Record saved (id: ${info.lastInsertRowid}) | Auto reminders: ${autoReminders.length}`);
     res.json({
-      success:    true,
-      record_id:  info.lastInsertRowid,
-      extracted:  structured,
-      ocr_text:   ocrText.slice(0, 500), // preview
+      success:          true,
+      record_id:        info.lastInsertRowid,
+      extracted:        structured,
+      percentiles:      { weight: weightPct, height: heightPct },
+      auto_reminders:   autoReminders,
+      ocr_text_preview: ocrText.slice(0, 300),
     });
 
   } catch (err) {

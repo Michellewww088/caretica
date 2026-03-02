@@ -4,7 +4,7 @@
  */
 const cron       = require('node-cron');
 const nodemailer = require('nodemailer');
-const { stmts }  = require('./database');
+const { stmts, db } = require('./database');
 
 // ── EMAIL TRANSPORT ──
 const transporter = nodemailer.createTransport({
@@ -96,6 +96,24 @@ function startScheduler() {
   }
 
   console.log('⏰  Reminder scheduler started — checking every minute...');
+
+  // ── DAILY: Expire trials ──
+  cron.schedule('0 0 * * *', () => {
+    try {
+      const result = db.prepare(`
+        UPDATE users
+        SET subscription_status = 'expired',
+            is_premium = 0
+        WHERE subscription_status = 'trialing'
+          AND trial_end_date < datetime('now')
+      `).run();
+      if (result.changes > 0) {
+        console.log(`⏱️  Trial expiry: ${result.changes} user(s) downgraded to free plan.`);
+      }
+    } catch (err) {
+      console.error('Trial expiry error:', err.message);
+    }
+  });
 
   cron.schedule('* * * * *', async () => {
     try {

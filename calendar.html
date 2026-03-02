@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Caretica — Calendar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="app.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+  <style>
+    .fc { font-family: 'Nunito', sans-serif; }
+    .fc .fc-toolbar-title { font-size: 1.2rem; font-weight: 900; color: #1E3A5F; }
+    .fc .fc-button-primary { background: #3B82F6; border-color: #3B82F6; font-weight: 700; border-radius: 8px; font-family: 'Nunito', sans-serif; }
+    .fc .fc-button-primary:hover { background: #1D4ED8; border-color: #1D4ED8; }
+    .fc .fc-button-primary:not(:disabled).fc-button-active { background: #1D4ED8; border-color: #1D4ED8; }
+    .fc .fc-daygrid-day-number { font-weight: 700; color: #1E3A5F; }
+    .fc .fc-col-header-cell-cushion { font-weight: 800; color: #64748B; font-size: 0.82rem; text-transform: uppercase; }
+    .fc .fc-day-today { background: #EFF6FF !important; }
+    .fc-event { border-radius: 6px !important; font-size: 0.75rem !important; font-weight: 700 !important; padding: 2px 6px !important; border: none !important; cursor: pointer; }
+    .fc .fc-daygrid-dot-event .fc-event-title { font-weight: 700; }
+    .event-detail-panel {
+      position: fixed; right: -380px; top: var(--topbar-h); bottom: 0;
+      width: 360px; background: #fff; border-left: 1px solid #E2EBF6;
+      box-shadow: -4px 0 20px rgba(59,130,246,0.1);
+      transition: right 0.3s ease; z-index: 300; overflow-y: auto;
+      padding: 24px;
+    }
+    .event-detail-panel.open { right: 0; }
+    .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.82rem; font-weight: 700; }
+    .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+    .type-colors { vaccine:#10B981; checkup:#3B82F6; feeding:#F97316; sleep:#7C3AED; custom:#6B7280; }
+    .notification-checks { display: flex; flex-direction: column; gap: 10px; }
+    .check-option { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 1.5px solid #E2EBF6; border-radius: 10px; cursor: pointer; transition: 0.2s; }
+    .check-option:hover { border-color: #3B82F6; background: #EFF6FF; }
+    .check-option input { accent-color: #3B82F6; width: 16px; height: 16px; }
+    .check-option label { font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px; flex: 1; }
+    .repeat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .repeat-btn {
+      padding: 10px; border: 1.5px solid #E2EBF6; border-radius: 10px;
+      background: #fff; cursor: pointer; font-family: 'Nunito', sans-serif;
+      font-size: 0.85rem; font-weight: 700; color: #64748B; text-align: center;
+      transition: 0.2s;
+    }
+    .repeat-btn.selected { border-color: #3B82F6; background: #EFF6FF; color: #1D4ED8; }
+    .type-selector { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 4px; }
+    .type-btn {
+      padding: 12px 8px; border: 1.5px solid #E2EBF6; border-radius: 10px;
+      background: #fff; cursor: pointer; font-family: 'Nunito', sans-serif;
+      font-size: 0.8rem; font-weight: 700; color: #64748B; text-align: center;
+      display: flex; flex-direction: column; gap: 4px; align-items: center;
+      transition: 0.2s;
+    }
+    .type-btn span:first-child { font-size: 1.3rem; }
+    .type-btn.selected { border-color: #3B82F6; background: #EFF6FF; color: #1D4ED8; }
+  </style>
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo"><span>🌸</span><span>Caretica</span></div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item"><i class="fas fa-home"></i> Dashboard</a>
+      <a href="profile.html"   class="nav-item"><i class="fas fa-baby"></i> Baby Profile</a>
+      <a href="growth.html"    class="nav-item"><i class="fas fa-chart-line"></i> Growth Tracking</a>
+      <a href="reminders.html" class="nav-item"><i class="fas fa-bell"></i> Reminders</a>
+      <a href="calendar.html"  class="nav-item active"><i class="fas fa-calendar"></i> Calendar</a>
+      <a href="community.html" class="nav-item"><i class="fas fa-comments"></i> Community</a>
+      <a href="premium.html"   class="nav-item" style="color:#F59E0B;"><i class="fas fa-crown"></i> Premium</a>
+    </nav>
+    <div class="sidebar-upgrade">
+      <div class="upgrade-card">
+        <i class="fas fa-crown"></i>
+        <p>Export calendar as PDF</p>
+        <button class="btn-upgrade" onclick="showPremiumModal()">Upgrade Now</button>
+      </div>
+    </div>
+  </aside>
+
+  <div class="app-content">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="topbar-menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+        <span class="topbar-title">Calendar</span>
+      </div>
+      <div class="topbar-right">
+        <button class="btn btn-primary btn-sm" onclick="openAddModal()">
+          <i class="fas fa-plus"></i> Add Reminder
+        </button>
+        <button class="icon-btn"><i class="fas fa-bell"></i><span class="notif-dot"></span></button>
+        <div class="user-avatar">S</div>
+      </div>
+    </header>
+
+    <main class="main-content" style="padding-right: 16px;">
+
+      <!-- LEGEND + FILTER ROW -->
+      <div class="card mb-6" style="padding: 16px 24px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;">
+          <div style="display:flex; gap:20px; flex-wrap:wrap;">
+            <div class="legend-item"><div class="legend-dot" style="background:#10B981"></div> Vaccine</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#3B82F6"></div> Checkup</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#F97316"></div> Feeding</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#7C3AED"></div> Sleep</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#6B7280"></div> Custom</div>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-secondary btn-sm" onclick="showPremiumModal()">
+              <i class="fas fa-filter"></i> Filter <span class="badge badge-premium"><i class="fas fa-crown"></i></span>
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="showPremiumModal()">
+              <i class="fas fa-file-pdf"></i> Export PDF <span class="badge badge-premium"><i class="fas fa-crown"></i></span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- FULLCALENDAR -->
+      <div class="card" style="padding: 20px;">
+        <div id="calendar"></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- EVENT DETAIL PANEL -->
+<div class="event-detail-panel" id="detailPanel">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px;">
+    <h3 style="font-size:1rem; font-weight:900;">Event Details</h3>
+    <button onclick="closeDetailPanel()" style="background:none;border:none;cursor:pointer;font-size:1.1rem;color:#64748B;"><i class="fas fa-times"></i></button>
+  </div>
+  <div id="detailContent"></div>
+</div>
+
+<!-- ADD REMINDER MODAL -->
+<div class="modal-overlay" id="addReminderModal">
+  <div class="modal" style="width:520px;">
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeAddModal()"><i class="fas fa-times"></i></button>
+      <i class="fas fa-bell"></i>
+      <h2>Add Reminder</h2>
+      <p>Schedule a new health reminder for Emma</p>
+    </div>
+    <div class="modal-body">
+      <form id="reminderForm" onsubmit="saveReminder(event)">
+
+        <!-- TYPE -->
+        <div class="form-group">
+          <label class="form-label">Reminder Type</label>
+          <div class="type-selector">
+            <button type="button" class="type-btn selected" data-type="vaccine" onclick="selectType(this)">
+              <span>💉</span><span>Vaccine</span>
+            </button>
+            <button type="button" class="type-btn" data-type="checkup" onclick="selectType(this)">
+              <span>🩺</span><span>Checkup</span>
+            </button>
+            <button type="button" class="type-btn" data-type="feeding" onclick="selectType(this)">
+              <span>🍼</span><span>Feeding</span>
+            </button>
+            <button type="button" class="type-btn" data-type="sleep" onclick="selectType(this)">
+              <span>😴</span><span>Sleep</span>
+            </button>
+            <button type="button" class="type-btn" data-type="medication" onclick="selectType(this)">
+              <span>💊</span><span>Medication</span>
+            </button>
+            <button type="button" class="type-btn" data-type="custom" onclick="selectType(this)">
+              <span>📋</span><span>Custom</span>
+            </button>
+          </div>
+          <input type="hidden" id="selectedType" value="vaccine"/>
+        </div>
+
+        <!-- TITLE -->
+        <div class="form-group">
+          <label class="form-label">Title</label>
+          <input type="text" class="form-control" id="reminderTitle" placeholder="e.g., 9-Month Pediatric Checkup" required/>
+        </div>
+
+        <!-- DATE + TIME ROW -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="form-group">
+            <label class="form-label">Date</label>
+            <input type="date" class="form-control" id="reminderDate" required/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Time</label>
+            <input type="time" class="form-control" id="reminderTime" required/>
+          </div>
+        </div>
+
+        <!-- REPEAT -->
+        <div class="form-group">
+          <label class="form-label">Repeat</label>
+          <div class="repeat-grid">
+            <button type="button" class="repeat-btn selected" data-repeat="once" onclick="selectRepeat(this)">🔂 Once</button>
+            <button type="button" class="repeat-btn" data-repeat="daily" onclick="selectRepeat(this)">📅 Daily</button>
+            <button type="button" class="repeat-btn" data-repeat="weekly" onclick="selectRepeat(this)">📆 Weekly</button>
+            <button type="button" class="repeat-btn" data-repeat="monthly" onclick="selectRepeat(this)">🗓️ Monthly</button>
+          </div>
+          <input type="hidden" id="selectedRepeat" value="once"/>
+        </div>
+
+        <!-- NOTIFICATION METHOD -->
+        <div class="form-group">
+          <label class="form-label">Notification Method</label>
+          <div class="notification-checks">
+            <div class="check-option">
+              <input type="checkbox" id="notifApp" value="in-app" checked/>
+              <label for="notifApp"><i class="fas fa-mobile-alt" style="color:#3B82F6;"></i> In-App Notification</label>
+              <span class="badge badge-free">Free</span>
+            </div>
+            <div class="check-option">
+              <input type="checkbox" id="notifEmail" value="email"/>
+              <label for="notifEmail"><i class="fas fa-envelope" style="color:#10B981;"></i> Email Notification</label>
+              <span class="badge badge-free">Free</span>
+            </div>
+            <div class="check-option" onclick="showPremiumModal()">
+              <input type="checkbox" id="notifSMS" value="sms" disabled/>
+              <label for="notifSMS" style="color:#94A3B8;"><i class="fas fa-comment-sms" style="color:#F59E0B;"></i> SMS Notification</label>
+              <span class="badge badge-premium"><i class="fas fa-crown"></i> Premium</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- NOTES -->
+        <div class="form-group">
+          <label class="form-label">Notes <span style="color:#94A3B8;font-weight:600;">(optional)</span></label>
+          <textarea class="form-control" id="reminderNotes" rows="2" placeholder="Doctor's name, location, special instructions..."></textarea>
+        </div>
+
+        <!-- BUTTONS -->
+        <div style="display:flex; gap:12px; margin-top:4px;">
+          <button type="submit" class="btn btn-primary" style="flex:1; justify-content:center;">
+            <i class="fas fa-save"></i> Save Reminder
+          </button>
+          <button type="button" class="btn btn-ghost" onclick="closeAddModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- PREMIUM MODAL -->
+<div class="modal-overlay" id="premiumModal">
+  <div class="modal">
+    <div class="modal-header">
+      <button class="modal-close" onclick="hidePremiumModal()"><i class="fas fa-times"></i></button>
+      <i class="fas fa-crown"></i>
+      <h2>Upgrade to Premium</h2>
+      <p>Advanced calendar filtering & PDF export</p>
+    </div>
+    <div class="modal-body">
+      <table class="feature-table">
+        <thead><tr><th>Feature</th><th>Free</th><th>Premium</th></tr></thead>
+        <tbody>
+          <tr><td>Monthly calendar view</td><td><i class="fas fa-check check-yes"></i></td><td><i class="fas fa-check check-yes"></i></td></tr>
+          <tr><td>Color-coded reminders</td><td><i class="fas fa-check check-yes"></i></td><td><i class="fas fa-check check-yes"></i></td></tr>
+          <tr><td>Advanced filtering by type/baby</td><td><i class="fas fa-times check-no"></i></td><td><i class="fas fa-crown check-premium"></i></td></tr>
+          <tr><td>Export calendar as PDF</td><td><i class="fas fa-times check-no"></i></td><td><i class="fas fa-crown check-premium"></i></td></tr>
+          <tr><td>SMS notifications</td><td><i class="fas fa-times check-no"></i></td><td><i class="fas fa-crown check-premium"></i></td></tr>
+        </tbody>
+      </table>
+      <div class="price-box">
+        <div class="price">$9.99 <span>/ month</span></div>
+        <p>Or $89.99/year — save 25%</p>
+      </div>
+      <button class="btn btn-premium btn-block mb-4"><i class="fas fa-crown"></i> Subscribe to Premium</button>
+      <div class="trust-badges">
+        <div class="trust-badge"><i class="fas fa-shield-alt"></i> Secure Payment</div>
+        <div class="trust-badge"><i class="fas fa-undo"></i> 30-day Refund</div>
+        <div class="trust-badge"><i class="fas fa-times-circle"></i> Cancel Anytime</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  // ── EVENT DATA ──
+  const typeColors = {
+    vaccine:    '#10B981',
+    checkup:    '#3B82F6',
+    feeding:    '#F97316',
+    sleep:      '#7C3AED',
+    medication: '#EC4899',
+    custom:     '#6B7280',
+  };
+  const typeEmojis = {
+    vaccine:'💉', checkup:'🩺', feeding:'🍼', sleep:'😴', medication:'💊', custom:'📋'
+  };
+
+  let events = [
+    { id:'1', title:'8-Month Checkup',       start:'2026-03-02T10:00:00', type:'checkup',    notes:'Dr. Amara Johnson, City Hospital' },
+    { id:'2', title:'Flu Vaccine',            start:'2026-03-18T09:00:00', type:'vaccine',    notes:'Annual flu shot' },
+    { id:'3', title:'Weight Check',           start:'2026-03-10T09:00:00', type:'checkup',    notes:'Follow-up weight monitoring' },
+    { id:'4', title:'Eye Development Check',  start:'2026-03-25T14:00:00', type:'checkup',    notes:'Eye specialist visit' },
+    { id:'5', title:'MMR Vaccine',            start:'2026-07-02T10:00:00', type:'vaccine',    notes:'12-month vaccine schedule' },
+    { id:'6', title:'Vitamin D Drops',        start:'2026-03-02T08:00:00', type:'medication', notes:'400 IU daily', allDay: true },
+    { id:'7', title:'Feeding Schedule',       start:'2026-03-02T07:00:00', type:'feeding',    notes:'Formula, every 3 hours, 150ml' },
+    { id:'8', title:'Nap Time',               start:'2026-03-02T13:00:00', type:'sleep',      notes:'Afternoon nap, ~1.5 hours' },
+    { id:'9', title:'9-Month Checkup',        start:'2026-04-05T10:00:00', type:'checkup',    notes:'Dr. Amara Johnson' },
+    { id:'10',title:'Chickenpox Vaccine',     start:'2026-08-15T10:00:00', type:'vaccine',    notes:'Scheduled vaccine' },
+  ];
+
+  function formatEvents() {
+    return events.map(e => ({
+      id: e.id,
+      title: typeEmojis[e.type] + ' ' + e.title,
+      start: e.start,
+      allDay: e.allDay || false,
+      backgroundColor: typeColors[e.type],
+      extendedProps: { type: e.type, notes: e.notes, originalTitle: e.title }
+    }));
+  }
+
+  // ── FULLCALENDAR INIT ──
+  let calendar;
+  document.addEventListener('DOMContentLoaded', () => {
+    const calEl = document.getElementById('calendar');
+    calendar = new FullCalendar.Calendar(calEl, {
+      initialView: 'dayGridMonth',
+      initialDate: '2026-03-01',
+      height: 'auto',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,listMonth'
+      },
+      events: formatEvents(),
+      eventClick(info) {
+        showDetailPanel(info.event);
+      },
+      dateClick(info) {
+        openAddModal(info.dateStr);
+      },
+      eventMouseEnter(info) {
+        info.el.style.transform = 'scale(1.02)';
+        info.el.style.zIndex = '100';
+      },
+      eventMouseLeave(info) {
+        info.el.style.transform = '';
+        info.el.style.zIndex = '';
+      },
+    });
+    calendar.render();
+
+    // Try to fetch from backend
+    fetchReminders();
+  });
+
+  async function fetchReminders() {
+    try {
+      const res = await fetch('http://localhost:3001/api/reminders');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.length > 0) {
+          events = data;
+          calendar.removeAllEvents();
+          calendar.addEventSource(formatEvents());
+        }
+      }
+    } catch(e) { /* Backend not running — using sample data */ }
+  }
+
+  // ── DETAIL PANEL ──
+  function showDetailPanel(event) {
+    const panel = document.getElementById('detailPanel');
+    const content = document.getElementById('detailContent');
+    const type = event.extendedProps.type;
+    const color = typeColors[type];
+    const start = new Date(event.start);
+    content.innerHTML = `
+      <div style="background:${color}15; border:1.5px solid ${color}40; border-radius:12px; padding:16px; margin-bottom:16px;">
+        <div style="font-size:2rem; margin-bottom:8px;">${typeEmojis[type]}</div>
+        <div style="font-weight:900; font-size:1.05rem; color:#1E3A5F; margin-bottom:4px;">${event.extendedProps.originalTitle}</div>
+        <div style="display:inline-block; background:${color}; color:#fff; padding:3px 10px; border-radius:50px; font-size:0.75rem; font-weight:700; text-transform:capitalize;">${type}</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div style="display:flex; gap:10px; align-items:center;">
+          <div style="width:32px;height:32px;background:#EFF6FF;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="fas fa-calendar" style="color:#3B82F6;font-size:0.85rem;"></i>
+          </div>
+          <div>
+            <div style="font-size:0.75rem;color:#94A3B8;font-weight:700;">DATE</div>
+            <div style="font-weight:800;font-size:0.92rem;">${start.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</div>
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <div style="width:32px;height:32px;background:#ECFDF5;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="fas fa-clock" style="color:#10B981;font-size:0.85rem;"></i>
+          </div>
+          <div>
+            <div style="font-size:0.75rem;color:#94A3B8;font-weight:700;">TIME</div>
+            <div style="font-weight:800;font-size:0.92rem;">${start.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}</div>
+          </div>
+        </div>
+        ${event.extendedProps.notes ? `
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+          <div style="width:32px;height:32px;background:#FEF3C7;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;">
+            <i class="fas fa-note-sticky" style="color:#F59E0B;font-size:0.85rem;"></i>
+          </div>
+          <div>
+            <div style="font-size:0.75rem;color:#94A3B8;font-weight:700;">NOTES</div>
+            <div style="font-weight:700;font-size:0.88rem;color:#1E3A5F;">${event.extendedProps.notes}</div>
+          </div>
+        </div>` : ''}
+      </div>
+      <div style="display:flex; gap:8px; margin-top:20px;">
+        <button class="btn btn-secondary btn-sm" style="flex:1;" onclick="editEvent('${event.id}')"><i class="fas fa-pen"></i> Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteEvent('${event.id}')"><i class="fas fa-trash"></i></button>
+      </div>
+    `;
+    panel.classList.add('open');
+  }
+  function closeDetailPanel() { document.getElementById('detailPanel').classList.remove('open'); }
+  function editEvent(id) { closeDetailPanel(); openAddModal(); }
+  function deleteEvent(id) {
+    if (confirm('Delete this reminder?')) {
+      events = events.filter(e => e.id !== id);
+      calendar.getEventById(id)?.remove();
+      closeDetailPanel();
+      showToast('Reminder deleted.');
+    }
+  }
+
+  // ── ADD REMINDER MODAL ──
+  let selectedDateStr = '';
+  function openAddModal(dateStr = '') {
+    selectedDateStr = dateStr;
+    if (dateStr) document.getElementById('reminderDate').value = dateStr;
+    else {
+      const t = new Date(); t.setMinutes(t.getMinutes() - t.getTimezoneOffset());
+      document.getElementById('reminderDate').value = t.toISOString().slice(0,10);
+    }
+    document.getElementById('reminderTime').value = '09:00';
+    document.getElementById('addReminderModal').classList.add('open');
+  }
+  function closeAddModal() { document.getElementById('addReminderModal').classList.remove('open'); }
+
+  function selectType(btn) {
+    document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    document.getElementById('selectedType').value = btn.dataset.type;
+  }
+  function selectRepeat(btn) {
+    document.querySelectorAll('.repeat-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    document.getElementById('selectedRepeat').value = btn.dataset.repeat;
+  }
+
+  async function saveReminder(e) {
+    e.preventDefault();
+    const type    = document.getElementById('selectedType').value;
+    const title   = document.getElementById('reminderTitle').value.trim();
+    const date    = document.getElementById('reminderDate').value;
+    const time    = document.getElementById('reminderTime').value;
+    const repeat  = document.getElementById('selectedRepeat').value;
+    const notes   = document.getElementById('reminderNotes').value.trim();
+    const notifMethods = [...document.querySelectorAll('.notification-checks input[type="checkbox"]:checked')].map(c => c.value);
+
+    if (!title || !date || !time) return;
+
+    const reminder = {
+      id: Date.now().toString(),
+      title, type, notes, repeat,
+      start: `${date}T${time}:00`,
+      notification_method: notifMethods.join(','),
+    };
+
+    // Add to calendar
+    calendar.addEvent({
+      id: reminder.id,
+      title: typeEmojis[type] + ' ' + title,
+      start: reminder.start,
+      backgroundColor: typeColors[type],
+      extendedProps: { type, notes, originalTitle: title }
+    });
+    events.push(reminder);
+
+    // Save to backend
+    try {
+      await fetch('http://localhost:3001/api/reminders', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(reminder)
+      });
+    } catch(err) { /* Backend not running */ }
+
+    closeAddModal();
+    document.getElementById('reminderForm').reset();
+    document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('selected'));
+    document.querySelector('.type-btn[data-type="vaccine"]').classList.add('selected');
+    document.getElementById('selectedType').value = 'vaccine';
+    document.querySelectorAll('.repeat-btn').forEach(b => b.classList.remove('selected'));
+    document.querySelector('.repeat-btn[data-repeat="once"]').classList.add('selected');
+    document.getElementById('selectedRepeat').value = 'once';
+
+    showToast('Reminder added to calendar! 🗓️');
+  }
+</script>
+</body>
+</html>

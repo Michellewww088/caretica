@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Caretica — Maternal & Infant Health Platform</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-inner">
+      <a href="#" class="logo">
+        <span class="logo-icon">🌸</span>
+        <span class="logo-text">Caretica</span>
+      </a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="#testimonials">Stories</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#cta" class="btn btn-primary nav-cta">Get Started</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero" id="home">
+    <div class="hero-bg-blobs">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+    </div>
+    <div class="container hero-inner">
+      <div class="hero-text fade-in">
+        <span class="badge">Trusted by 50,000+ Families</span>
+        <h1>Your Smart Companion for <span class="highlight">Every Stage</span> of Motherhood</h1>
+        <p>Caretica brings smart tracking, timely reminders, and seamless care coordination to mothers and babies — from the first trimester through early childhood.</p>
+        <div class="hero-actions">
+          <a href="#cta" class="btn btn-primary">Start for Free</a>
+          <a href="#how" class="btn btn-ghost">
+            <i class="fas fa-play-circle"></i> See How It Works
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <strong>50K+</strong>
+            <span>Families</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <strong>98%</strong>
+            <span>Satisfaction</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <strong>24/7</strong>
+            <span>Support</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual fade-in delay-2">
+        <div class="phone-mockup">
+          <div class="phone-frame">
+            <div class="phone-screen">
+              <div class="app-header">
+                <span>Good morning, Sarah 👋</span>
+                <span class="week-badge">Week 28</span>
+              </div>
+              <div class="app-card pulse-card">
+                <div class="card-icon">💓</div>
+                <div>
+                  <div class="card-title">Baby's Heartbeat</div>
+                  <div class="card-value">148 bpm <span class="normal">Normal</span></div>
+                </div>
+              </div>
+              <div class="app-card">
+                <div class="card-icon">🍎</div>
+                <div>
+                  <div class="card-title">Nutrition Check</div>
+                  <div class="card-value">Iron &amp; Folic Acid ✓</div>
+                </div>
+              </div>
+              <div class="reminder-pill">
+                <i class="fas fa-bell"></i> Prenatal visit — Tomorrow 10:00 AM
+              </div>
+              <div class="app-card">
+                <div class="card-icon">📈</div>
+                <div>
+                  <div class="card-title">Growth Tracker</div>
+                  <div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="phone-glow"></div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-wave">
+      <svg viewBox="0 0 1440 100" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#fff" d="M0,60 C360,120 1080,0 1440,60 L1440,100 L0,100 Z"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ── PARTNERS ── -->
+  <section class="partners">
+    <div class="container">
+      <p class="partners-label">Trusted &amp; Partnered With</p>
+      <div class="partners-logos">
+        <div class="partner-logo"><i class="fas fa-hospital"></i> HealthFirst</div>
+        <div class="partner-logo"><i class="fas fa-stethoscope"></i> MediCare Pro</div>
+        <div class="partner-logo"><i class="fas fa-heart"></i> BabyWell</div>
+        <div class="partner-logo"><i class="fas fa-user-md"></i> OB Connect</div>
+        <div class="partner-logo"><i class="fas fa-shield-alt"></i> SafeNest</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FEATURES ── -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Features</span>
+        <h2>Everything You Need, <span class="highlight">All in One Place</span></h2>
+        <p>Caretica combines clinical intelligence with compassionate design to support mothers at every milestone.</p>
+      </div>
+      <div class="features-grid">
+
+        <div class="feature-card card-pink reveal">
+          <div class="feature-icon">🤰</div>
+          <h3>Pregnancy Tracking</h3>
+          <p>Week-by-week insights on baby development, body changes, and what to expect — tailored to your due date.</p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check"></i> Week-by-week baby updates</li>
+            <li><i class="fas fa-check"></i> Symptom journal</li>
+            <li><i class="fas fa-check"></i> Weight &amp; belly tracker</li>
+          </ul>
+        </div>
+
+        <div class="feature-card card-purple reveal delay-1">
+          <div class="feature-icon">🔔</div>
+          <h3>Smart Reminders</h3>
+          <p>Never miss a prenatal appointment, vaccination, or medication. Caretica sends intelligent, timely alerts.</p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check"></i> Appointment alerts</li>
+            <li><i class="fas fa-check"></i> Medication reminders</li>
+            <li><i class="fas fa-check"></i> Vaccine schedules</li>
+          </ul>
+        </div>
+
+        <div class="feature-card card-blue reveal delay-2">
+          <div class="feature-icon">👶</div>
+          <h3>Infant Milestones</h3>
+          <p>Track your baby's growth, feeding, sleep, and developmental milestones from birth through toddlerhood.</p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check"></i> Growth charts</li>
+            <li><i class="fas fa-check"></i> Feeding & sleep logs</li>
+            <li><i class="fas fa-check"></i> Milestone tracker</li>
+          </ul>
+        </div>
+
+        <div class="feature-card card-green reveal">
+          <div class="feature-icon">🩺</div>
+          <h3>Care Coordination</h3>
+          <p>Connect your OB, pediatrician, and midwife in one shared care network for seamless, unified health records.</p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check"></i> Shared care records</li>
+            <li><i class="fas fa-check"></i> Doctor messaging</li>
+            <li><i class="fas fa-check"></i> Referral management</li>
+          </ul>
+        </div>
+
+        <div class="feature-card card-orange reveal delay-1">
+          <div class="feature-icon">🧠</div>
+          <h3>Mental Wellness</h3>
+          <p>Postpartum mood tracking, guided meditations, and access to mental health resources when you need them most.</p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check"></i> Mood check-ins</li>
+            <li><i class="fas fa-check"></i> Guided meditations</li>
+            <li><i class="fas fa-check"></i> PPD screening</li>
+          </ul>
+        </div>
+
+        <div class="feature-card card-teal reveal delay-2">
+          <div class="feature-icon">📊</div>
+          <h3>Health Analytics</h3>
+          <p>Visual dashboards and AI-powered insights help you and your care team make informed decisions fast.</p>
+          <ul class="feature-list">
+            <li><i class="fas fa-check"></i> Health trends</li>
+            <li><i class="fas fa-check"></i> AI risk alerts</li>
+            <li><i class="fas fa-check"></i> Shareable reports</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── HOW IT WORKS ── -->
+  <section class="how" id="how">
+    <div class="how-bg">
+      <div class="blob blob-4"></div>
+    </div>
+    <div class="container">
+      <div class="section-header light">
+        <span class="section-tag tag-light">How It Works</span>
+        <h2>Simple Steps to <span class="highlight-light">Better Care</span></h2>
+        <p>Getting started with Caretica takes less than 2 minutes.</p>
+      </div>
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step-number">01</div>
+          <div class="step-icon">📱</div>
+          <h3>Create Your Profile</h3>
+          <p>Sign up and enter your pregnancy stage or baby's birth date. Caretica personalizes everything for you instantly.</p>
+        </div>
+        <div class="step-arrow"><i class="fas fa-arrow-right"></i></div>
+        <div class="step reveal delay-1">
+          <div class="step-number">02</div>
+          <div class="step-icon">🔗</div>
+          <h3>Connect Your Care Team</h3>
+          <p>Invite your doctors and midwife to join your Caretica network for shared records and direct communication.</p>
+        </div>
+        <div class="step-arrow"><i class="fas fa-arrow-right"></i></div>
+        <div class="step reveal delay-2">
+          <div class="step-number">03</div>
+          <div class="step-icon">✨</div>
+          <h3>Track &amp; Thrive</h3>
+          <p>Log daily updates, receive smart alerts, and watch your journey unfold — all in one beautiful dashboard.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TESTIMONIALS ── -->
+  <section class="testimonials" id="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Real Stories</span>
+        <h2>Loved by <span class="highlight">Thousands of Families</span></h2>
+      </div>
+      <div class="testimonials-grid">
+
+        <div class="testimonial-card reveal">
+          <div class="stars">★★★★★</div>
+          <p>"Caretica kept me calm throughout my entire pregnancy. The weekly updates and reminders made me feel like I was never alone in this journey."</p>
+          <div class="testimonial-author">
+            <div class="avatar" style="background:#f9a8d4">S</div>
+            <div>
+              <strong>Sarah M.</strong>
+              <span>First-time mom, 32</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal delay-1">
+          <div class="stars">★★★★★</div>
+          <p>"As a pediatrician, I recommend Caretica to all my patients. The shared records feature has genuinely improved the continuity of care I can offer."</p>
+          <div class="testimonial-author">
+            <div class="avatar" style="background:#a5b4fc">D</div>
+            <div>
+              <strong>Dr. Amara J.</strong>
+              <span>Pediatrician</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="testimonial-card reveal delay-2">
+          <div class="stars">★★★★★</div>
+          <p>"The postpartum mood tracker literally saved me. It flagged early signs and helped me get the support I needed before things got worse."</p>
+          <div class="testimonial-author">
+            <div class="avatar" style="background:#6ee7b7">L</div>
+            <div>
+              <strong>Layla K.</strong>
+              <span>Mom of two</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ── -->
+  <section class="faq" id="faq">
+    <div class="container faq-inner">
+      <div class="section-header">
+        <span class="section-tag">FAQ</span>
+        <h2>Common <span class="highlight">Questions</span></h2>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item reveal">
+          <button class="faq-question" aria-expanded="false">
+            Is Caretica free to use? <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="faq-answer">
+            <p>Caretica offers a free plan with core tracking and reminders. Our Premium plan unlocks care coordination, analytics, and unlimited care team members.</p>
+          </div>
+        </div>
+        <div class="faq-item reveal delay-1">
+          <button class="faq-question" aria-expanded="false">
+            Is my health data secure? <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="faq-answer">
+            <p>Absolutely. Caretica is HIPAA-compliant, and all data is encrypted end-to-end. We never sell your personal health data to third parties.</p>
+          </div>
+        </div>
+        <div class="faq-item reveal delay-2">
+          <button class="faq-question" aria-expanded="false">
+            Can I use Caretica after my baby is born? <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="faq-answer">
+            <p>Yes! Caretica seamlessly transitions from pregnancy tracking to infant and toddler milestone tracking — all in the same app, from birth to age 5.</p>
+          </div>
+        </div>
+        <div class="faq-item reveal">
+          <button class="faq-question" aria-expanded="false">
+            How do I add my doctor to Caretica? <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="faq-answer">
+            <p>Simply send your doctor an invite from within the app. They'll receive a secure link to join your care circle and access shared records with your permission.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA ── -->
+  <section class="cta" id="cta">
+    <div class="cta-blob"></div>
+    <div class="container cta-inner">
+      <div class="cta-content reveal">
+        <span class="section-tag tag-light">Get Started</span>
+        <h2>Start Your Journey <span class="highlight-light">Today</span></h2>
+        <p>Join over 50,000 families who trust Caretica to guide them through every beautiful milestone.</p>
+        <form class="cta-form" id="ctaForm">
+          <input type="email" placeholder="Enter your email address" required />
+          <button type="submit" class="btn btn-white">Get Early Access</button>
+        </form>
+        <p class="cta-note">Free to start · No credit card required · Cancel anytime</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="#" class="logo">
+          <span class="logo-icon">🌸</span>
+          <span class="logo-text">Caretica</span>
+        </a>
+        <p>Smart care for every mother and child — from the first heartbeat to the first steps and beyond.</p>
+        <div class="social-links">
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+          <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#">Pricing</a></li>
+            <li><a href="#">For Clinics</a></li>
+            <li><a href="#">Mobile App</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Press</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Caretica. All rights reserved. Made with 💗 for every mother.</p>
+    </div>
+  </footer>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span>You're on the list! We'll be in touch soon. 🌸</span>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -95,11 +95,13 @@ export default function Home() {
 
   const [dailyTip, setDailyTip]       = useState(null)
   const [tipLoading, setTipLoading]   = useState(true)
+  const [dataLoading, setDataLoading] = useState(true)
 
   const user      = authService.getUser()
   const isPregnant = user?.is_pregnant
 
   const fetchData = useCallback(async () => {
+    setDataLoading(true)
     try {
       const [babyData, reminderData, statusData] = await Promise.all([
         babyService.getMyBaby(),
@@ -114,6 +116,7 @@ export default function Home() {
         setWeeksPremature(babyData.weeks_premature || 0)
       }
     } catch {}
+    setDataLoading(false)
   }, [])
 
   const fetchGrowth = useCallback(async () => {
@@ -215,6 +218,40 @@ export default function Home() {
 
   // Fallback tip
   const displayTip = dailyTip || stage.aiTip
+
+  if (dataLoading) {
+    return (
+      <Layout title="Home">
+        <div className="space-y-4 animate-pulse">
+          <div className="h-6 w-40 bg-gray-100 rounded-lg" />
+          <div className="h-4 w-32 bg-gray-100 rounded-lg" />
+          <div className="h-32 bg-gray-100 rounded-2xl" />
+          <div className="h-48 bg-gray-100 rounded-2xl" />
+          <div className="h-24 bg-gray-100 rounded-2xl" />
+        </div>
+      </Layout>
+    )
+  }
+
+  if (!baby && !isPregnant) {
+    return (
+      <Layout title="Home">
+        <div className="flex flex-col items-center justify-center py-20 text-center px-4">
+          <div className="text-6xl mb-5">👶</div>
+          <h2 className="text-lg font-semibold text-gray-800 mb-2">Welcome to Caretica!</h2>
+          <p className="text-sm text-gray-400 mb-6 max-w-xs">
+            It looks like your profile isn't set up yet. Complete onboarding to get started.
+          </p>
+          <button
+            onClick={() => navigate('/onboarding')}
+            className="bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold px-6 py-3 rounded-xl transition-colors"
+          >
+            Set Up My Profile
+          </button>
+        </div>
+      </Layout>
+    )
+  }
 
   return (
     <Layout title="Home">

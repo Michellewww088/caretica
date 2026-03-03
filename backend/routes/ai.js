@@ -115,13 +115,57 @@ Generate 1 personalized daily parenting tip (2–3 sentences). Reference WHO sta
   }
 });
 
+// ── Build a data-aware summary without Claude (used as fallback) ──
+function buildDataAwareSummary(baby, correctedAge, stage, latestLogs, weightPct, heightPct) {
+  const name = baby.name;
+  const age  = Math.round(correctedAge);
+  const parts = [];
+
+  // Opening line with age + stage
+  parts.push(`${name} is ${age < 1 ? 'a newborn' : `${age} month${age !== 1 ? 's' : ''} old`} and currently in the ${stage.label} stage.`);
+
+  // Weight assessment
+  if (latestLogs.weight && weightPct) {
+    const w = latestLogs.weight.value;
+    if (weightPct.status === 'normal') {
+      parts.push(`Weight is ${w}kg — ${weightPct.label} per WHO standards, which is a healthy range.`);
+    } else if (weightPct.status === 'watch') {
+      parts.push(`Weight is ${w}kg — ${weightPct.label} per WHO standards. Keep monitoring and discuss with your pediatrician.`);
+    } else {
+      parts.push(`Weight is ${w}kg — ${weightPct.label} per WHO standards. Please consult your pediatrician soon.`);
+    }
+  } else if (latestLogs.weight) {
+    parts.push(`Latest weight recorded: ${latestLogs.weight.value}kg.`);
+  }
+
+  // Height assessment
+  if (latestLogs.height && heightPct) {
+    parts.push(`Height is ${latestLogs.height.value}cm — ${heightPct.label}.`);
+  } else if (latestLogs.height) {
+    parts.push(`Latest height recorded: ${latestLogs.height.value}cm.`);
+  }
+
+  // Extra metrics
+  if (latestLogs.head)    parts.push(`Head circumference: ${latestLogs.head.value}cm.`);
+  if (latestLogs.sleep)   parts.push(`Averaging ${latestLogs.sleep.value} hours of sleep per day.`);
+  if (latestLogs.feeding) parts.push(`Latest feeding: ${latestLogs.feeding.value}ml.`);
+
+  // Stage-based development tip
+  parts.push(stage.aiTip);
+
+  // Always end with disclaimer
+  parts.push('Always consult your pediatrician for personalized advice.');
+
+  return parts.join(' ');
+}
+
 // ── POST /api/ai/growth-summary ──
 router.post('/growth-summary', authMiddleware, async (req, res) => {
   try {
     const baby = await prisma.baby.findFirst({ where: { user_id: req.user.id } });
     if (!baby) return res.status(404).json({ error: 'No baby profile found' });
 
-    const today = getTodayString();
+    const today        = getTodayString();
     const forceRefresh = req.body?.force === true;
 
     // Check cache (unless force refresh)
@@ -156,40 +200,29 @@ router.post('/growth-summary', authMiddleware, async (req, res) => {
       ? calcPercentile(Math.round(correctedAge), latestLogs.height.value, 'height', genderKey)
       : null;
 
-    const babyTypeLabel = baby.baby_type === 'premature'
-      ? `premature (${baby.weeks_premature}wks early, corrected age ${Math.round(correctedAge)}mo)`
-      : baby.baby_type;
+    const hasData = Object.keys(latestLogs).length > 0;
 
-    // Build measurement lines
-    const measurementLines = [];
-    if (latestLogs.weight) measurementLines.push(`- Weight: ${latestLogs.weight.value}kg — ${weightPct ? weightPct.label : 'no percentile data'}`);
-    if (latestLogs.height) measurementLines.push(`- Height: ${latestLogs.height.value}cm — ${heightPct ? heightPct.label : 'no percentile data'}`);
-    if (latestLogs.head)    measurementLines.push(`- Head circumference: ${latestLogs.head.value}cm`);
-    if (latestLogs.sleep)   measurementLines.push(`- Sleep: ${latestLogs.sleep.value}hrs/day`);
-    if (latestLogs.feeding) measurementLines.push(`- Feeding: ${latestLogs.feeding.value}ml`);
-
-    if (measurementLines.length === 0) {
-      // No data yet — static tip from stage
-      const summary = `${baby.name} is in the ${stage.label} stage. Start logging measurements to receive personalized AI insights based on WHO growth standards. Always consult your pediatrician for personalized advice.`;
+    // No measurements logged yet
+    if (!hasData) {
+      const summary = `${baby.name} is in the ${stage.label} stage. Start logging measurements to receive personalized insights based on WHO growth standards. Always consult your pediatrician for personalized advice.`;
       return res.json({ summary, cached: false, fallback: true });
     }
 
-    // No API key fallback
-    if (!process.env.ANTHROPIC_API_KEY) {
-      const summary = `${baby.name} is ${Math.round(correctedAge)} months old and in the ${stage.label} stage. ${
-        weightPct ? `Their weight is at the ${weightPct.label} per WHO standards. ` : ''
-      }Keep tracking regularly to monitor growth trends. ${stage.aiTip} Always consult your pediatrician for personalized advice.`;
+    // Try Claude if API key is available
+    if (process.env.ANTHROPIC_API_KEY) {
+      try {
+        const babyTypeLabel = baby.baby_type === 'premature'
+          ? `premature (${baby.weeks_premature}wks early, corrected age ${Math.round(correctedAge)}mo)`
+          : baby.baby_type;
 
-      await prisma.growthSummary.upsert({
-        where:  { baby_id_date: { baby_id: baby.id, date: today } },
-        update: { content: summary },
-        create: { baby_id: baby.id, date: today, content: summary },
-      });
+        const measurementLines = [];
+        if (latestLogs.weight) measurementLines.push(`- Weight: ${latestLogs.weight.value}kg — ${weightPct ? weightPct.label : 'no percentile data'}`);
+        if (latestLogs.height) measurementLines.push(`- Height: ${latestLogs.height.value}cm — ${heightPct ? heightPct.label : 'no percentile data'}`);
+        if (latestLogs.head)    measurementLines.push(`- Head circumference: ${latestLogs.head.value}cm`);
+        if (latestLogs.sleep)   measurementLines.push(`- Sleep: ${latestLogs.sleep.value}hrs/day`);
+        if (latestLogs.feeding) measurementLines.push(`- Feeding: ${latestLogs.feeding.value}ml`);
 
-      return res.json({ summary, cached: false, fallback: true, percentiles: { weight: weightPct, height: heightPct } });
-    }
-
-    const systemPrompt = `You are a warm pediatric health assistant writing for parents.
+        const systemPrompt = `You are a warm pediatric health assistant writing for parents.
 Baby: ${baby.name}, ${Math.round(correctedAge)}mo (${babyTypeLabel}). Stage: ${stage.label}.
 Latest measurements:
 ${measurementLines.join('\n')}
@@ -201,37 +234,49 @@ Write a short, warm educational growth summary (3–5 sentences):
 - End with: "Always consult your pediatrician for personalized advice."
 Do not diagnose. Max 150 words.`;
 
-    const summary = await callClaude(
-      [{ role: 'user', content: 'Please write a growth summary for this baby.' }],
-      systemPrompt,
-      300
-    );
+        const summary = await callClaude(
+          [{ role: 'user', content: 'Please write a growth summary for this baby.' }],
+          systemPrompt,
+          300
+        );
 
-    // Cache (upsert to handle force refresh overwrite)
+        await prisma.growthSummary.upsert({
+          where:  { baby_id_date: { baby_id: baby.id, date: today } },
+          update: { content: summary },
+          create: { baby_id: baby.id, date: today, content: summary },
+        });
+
+        return res.json({
+          summary,
+          cached:       false,
+          generated_at: new Date().toISOString(),
+          percentiles:  { weight: weightPct, height: heightPct },
+        });
+      } catch (claudeErr) {
+        console.warn('Claude API failed, using data-aware fallback:', claudeErr.message);
+        // Fall through to data-aware summary below
+      }
+    }
+
+    // Data-aware fallback — always reflects the latest logged measurements
+    const summary = buildDataAwareSummary(baby, correctedAge, stage, latestLogs, weightPct, heightPct);
+
     await prisma.growthSummary.upsert({
       where:  { baby_id_date: { baby_id: baby.id, date: today } },
       update: { content: summary },
       create: { baby_id: baby.id, date: today, content: summary },
     });
 
-    res.json({
+    return res.json({
       summary,
       cached:      false,
-      generated_at: new Date().toISOString(),
+      fallback:    true,
       percentiles: { weight: weightPct, height: heightPct },
     });
+
   } catch (err) {
     console.error('Growth summary error:', err);
-    // Fallback to stage tip
-    try {
-      const baby2 = await prisma.baby.findFirst({ where: { user_id: req.user.id } });
-      const age2  = baby2 ? getAgeMonths(baby2.birthdate) : 0;
-      const ca2   = baby2 ? getCorrectedAge(age2, baby2.baby_type, baby2.weeks_premature) : 0;
-      const st2   = getStage(ca2);
-      return res.json({ summary: st2.aiTip + ' Always consult your pediatrician for personalized advice.', cached: false, fallback: true });
-    } catch {
-      res.status(500).json({ error: err.message });
-    }
+    res.status(500).json({ error: err.message });
   }
 });
 

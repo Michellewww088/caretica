@@ -287,8 +287,8 @@ export default function Dashboard() {
         </div>
       )}
 
-      {showModal && <AddGrowthModal onClose={() => setShowModal(false)} onAdded={fetchData} />}
-      {showBatch && <BatchGrowthModal onClose={() => setShowBatch(false)} onAdded={fetchData} />}
+      {showModal && <AddGrowthModal onClose={() => setShowModal(false)} onAdded={() => { fetchData(); fetchSummary(true) }} />}
+      {showBatch && <BatchGrowthModal onClose={() => setShowBatch(false)} onAdded={() => { fetchData(); fetchSummary(true) }} />}
     </Layout>
   )
 }

@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                     Int       @id @default(autoincrement())
+  email                  String    @unique
+  password_hash          String
+  name                   String?
+  subscription_status    String    @default("trialing")
+  trial_start_date       DateTime?
+  trial_end_date         DateTime?
+  stripe_customer_id     String?
+  stripe_subscription_id String?
+  subscription_expiry    DateTime?
+  is_premium             Boolean   @default(true)
+  onboarding_completed   Boolean   @default(false)
+  is_pregnant            Boolean   @default(false)
+  due_date               DateTime?
+  created_at             DateTime  @default(now())
+
+  babies    Baby[]
+  reminders Reminder[]
+
+  @@map("users")
+}
+
+model Baby {
+  id               Int      @id @default(autoincrement())
+  user_id          Int
+  name             String
+  birthdate        DateTime
+  gender           String?
+  blood_type       String?
+  baby_type        String   @default("normal")
+  weeks_premature  Int      @default(0)
+  photo_path       String?
+  created_at       DateTime @default(now())
+
+  user             User            @relation(fields: [user_id], references: [id])
+  reminders        Reminder[]
+  growth_logs      GrowthLog[]
+  medical_records  MedicalRecord[]
+  daily_tips       DailyTip[]
+  growth_summaries GrowthSummary[]
+
+  @@map("babies")
+}
+
+model DailyTip {
+  id         Int      @id @default(autoincrement())
+  baby_id    Int
+  date       String
+  content    String
+  created_at DateTime @default(now())
+
+  baby Baby @relation(fields: [baby_id], references: [id])
+
+  @@unique([baby_id, date])
+  @@map("daily_tips")
+}
+
+model GrowthSummary {
+  id         Int      @id @default(autoincrement())
+  baby_id    Int
+  date       String
+  content    String
+  created_at DateTime @default(now())
+
+  baby Baby @relation(fields: [baby_id], references: [id])
+
+  @@unique([baby_id, date])
+  @@map("growth_summaries")
+}
+
+model Reminder {
+  id                  Int      @id @default(autoincrement())
+  user_id             Int
+  baby_id             Int
+  type                String
+  title               String
+  datetime            DateTime
+  repeat_frequency    String   @default("once")
+  notification_method String   @default("in-app")
+  notes               String?
+  status              String   @default("active")
+  email_sent          Boolean  @default(false)
+  created_at          DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id])
+  baby Baby @relation(fields: [baby_id], references: [id])
+
+  @@map("reminders")
+}
+
+model GrowthLog {
+  id        Int      @id @default(autoincrement())
+  baby_id   Int
+  type      String
+  value     Float
+  unit      String   @default("")
+  logged_at DateTime @default(now())
+
+  baby Baby @relation(fields: [baby_id], references: [id])
+
+  @@map("growth_logs")
+}
+
+model MedicalRecord {
+  id           Int       @id @default(autoincrement())
+  baby_id      Int
+  record_type  String?
+  vaccine_name String?
+  date         DateTime?
+  weight       Float?
+  height       Float?
+  doctor_notes String?
+  ai_summary   String?
+  file_path    String?
+  created_at   DateTime  @default(now())
+
+  baby Baby @relation(fields: [baby_id], references: [id])
+
+  @@map("medical_records")
+}

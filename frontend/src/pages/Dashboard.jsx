@@ -61,8 +61,9 @@ export default function Dashboard() {
   const [summaryLoading, setSummaryLoading]     = useState(true)
   const [regenerating, setRegenerating]         = useState(false)
 
-  const fetchData = useCallback(async () => {
-    setLoading(true)
+  // Shared data loader — silent=true skips the loading spinner (used after logging)
+  const loadData = useCallback(async (silent = false) => {
+    if (!silent) setLoading(true)
     try {
       const [babyData, growthData, recordsData] = await Promise.all([
         babyService.getMyBaby(),
@@ -89,9 +90,12 @@ export default function Dashboard() {
         }
       }
     } finally {
-      setLoading(false)
+      if (!silent) setLoading(false)
     }
   }, [])
+
+  const fetchData    = useCallback(() => loadData(false), [loadData])
+  const refreshData  = useCallback(() => loadData(true),  [loadData])
 
   const fetchSummary = useCallback(async (force = false) => {
     setSummaryLoading(true)
@@ -309,8 +313,8 @@ export default function Dashboard() {
         </div>
       )}
 
-      {showModal && <AddGrowthModal onClose={() => setShowModal(false)} onAdded={() => { fetchData(); fetchSummary(true) }} />}
-      {showBatch && <BatchGrowthModal onClose={() => setShowBatch(false)} onAdded={() => { fetchData(); fetchSummary(true) }} />}
+      {showModal && <AddGrowthModal onClose={() => setShowModal(false)} onAdded={() => { refreshData(); fetchSummary(true) }} />}
+      {showBatch && <BatchGrowthModal onClose={() => setShowBatch(false)} onAdded={() => { refreshData(); fetchSummary(true) }} />}
     </Layout>
   )
 }

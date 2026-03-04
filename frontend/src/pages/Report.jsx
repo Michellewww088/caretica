@@ -19,7 +19,7 @@ export default function Report() {
     setLoading(true)
     setError('')
     try {
-      const res = await fetch('/api/report/generate', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/report/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...authService.authHeaders() },
       })

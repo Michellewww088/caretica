@@ -47,7 +47,7 @@ export default function AddGrowthModal({ onClose, onAdded, focusKey = '' }) {
     try {
       const token = authService.getToken()
       for (const m of entries) {
-        await fetch('/api/growth', {
+        await fetch((import.meta.env.VITE_API_URL || '') + '/api/growth', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
           body: JSON.stringify({

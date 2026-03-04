@@ -55,7 +55,7 @@ export default function BatchGrowthModal({ onClose, onAdded }) {
     setLoading(true)
     try {
       const token = authService.getToken()
-      const res = await fetch('/api/growth/batch', {
+      const res = await fetch((import.meta.env.VITE_API_URL || '') + '/api/growth/batch', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ rows: valid }),

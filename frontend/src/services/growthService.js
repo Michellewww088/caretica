@@ -1,6 +1,6 @@
 import { authService } from './authService'
 
-const API = '/api'
+const API = (import.meta.env.VITE_API_URL || '') + '/api'
 
 export const growthService = {
   async getLogs() {

@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Layout from '../components/Layout'
 import GrowthChart from '../components/GrowthChart'
 import AddGrowthModal from '../components/AddGrowthModal'
@@ -48,7 +49,10 @@ function trendArrow(logs, type) {
   return { arrow: '→', color: 'text-gray-400' }
 }
 
+const EMPTY_QUICK = { weight: '', height: '', sleep: '', feeding: '' }
+
 export default function Dashboard() {
+  const navigate = useNavigate()
   const [baby, setBaby]             = useState(null)
   const [logs, setLogs]             = useState([])
   const [records, setRecords]       = useState([])
@@ -60,6 +64,9 @@ export default function Dashboard() {
   const [growthSummary, setGrowthSummary]       = useState(null)
   const [summaryLoading, setSummaryLoading]     = useState(true)
   const [regenerating, setRegenerating]         = useState(false)
+  const [quickLog, setQuickLog]       = useState(EMPTY_QUICK)
+  const [quickSaving, setQuickSaving] = useState(false)
+  const [quickSaved, setQuickSaved]   = useState(false)
 
   // Shared data loader — silent=true skips the loading spinner (used after logging)
   const loadData = useCallback(async (silent = false) => {
@@ -110,6 +117,26 @@ export default function Dashboard() {
     setRegenerating(true)
     await fetchSummary(true)
     setRegenerating(false)
+  }
+
+  const handleQuickLog = async (e) => {
+    e.preventDefault()
+    const row = { date: new Date().toISOString().slice(0, 10) }
+    if (quickLog.weight)  row.weight          = quickLog.weight
+    if (quickLog.height)  row.height          = quickLog.height
+    if (quickLog.sleep)   row.sleep_hours     = quickLog.sleep
+    if (quickLog.feeding) row.feeding_amount  = quickLog.feeding
+    if (Object.keys(row).length <= 1) return
+    setQuickSaving(true)
+    try {
+      await growthService.addBatch([row])
+      setQuickLog(EMPTY_QUICK)
+      setQuickSaved(true)
+      setTimeout(() => setQuickSaved(false), 3000)
+      refreshData()
+      fetchSummary(true)
+    } catch {}
+    setQuickSaving(false)
   }
 
   useEffect(() => {
@@ -181,6 +208,36 @@ export default function Dashboard() {
             + Log
           </button>
         </div>
+      </div>
+
+      {/* Quick Log */}
+      <div className="bg-white rounded-2xl border border-gray-100 p-5 mb-6 shadow-sm">
+        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">⚡ Quick Log</p>
+        <form onSubmit={handleQuickLog}>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
+            <QuickField icon="⚖️" label="Weight" unit="kg"  value={quickLog.weight}  onChange={v => setQuickLog(q => ({ ...q, weight: v }))}  placeholder="e.g. 7.5" />
+            <QuickField icon="📏" label="Height" unit="cm"  value={quickLog.height}  onChange={v => setQuickLog(q => ({ ...q, height: v }))}  placeholder="e.g. 68" />
+            <QuickField icon="😴" label="Sleep"  unit="hrs" value={quickLog.sleep}   onChange={v => setQuickLog(q => ({ ...q, sleep: v }))}   placeholder="e.g. 14" />
+            <QuickField icon="🍼" label="Feeding" unit="ml" value={quickLog.feeding} onChange={v => setQuickLog(q => ({ ...q, feeding: v }))} placeholder="e.g. 120" />
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              type="submit"
+              disabled={quickSaving}
+              className="bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-5 py-2 rounded-xl transition-colors disabled:opacity-50"
+            >
+              {quickSaving ? 'Saving…' : 'Save All'}
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/upload')}
+              className="border border-gray-200 text-gray-500 hover:bg-gray-50 text-sm font-medium px-4 py-2 rounded-xl transition-colors flex items-center gap-1.5"
+            >
+              📂 <span>Upload Records</span>
+            </button>
+            {quickSaved && <span className="text-sm text-green-600 font-medium">✓ Saved!</span>}
+          </div>
+        </form>
       </div>
 
       {/* Stats grid */}
@@ -344,6 +401,23 @@ function ChartCard({ title, sub, children }) {
         {sub && <span className="text-xs text-gray-400">{sub}</span>}
       </div>
       {children}
+    </div>
+  )
+}
+
+function QuickField({ icon, label, unit, value, onChange, placeholder }) {
+  return (
+    <div>
+      <label className="block text-xs font-medium text-gray-500 mb-1">
+        {icon} {label} <span className="text-gray-400 font-normal">({unit})</span>
+      </label>
+      <input
+        type="number"
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
     </div>
   )
 }

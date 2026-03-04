@@ -14,7 +14,7 @@ const METRICS = [
 const API_TYPE = { weight: 'weight', height: 'height', head: 'head', sleep_hours: 'sleep', feeding_amount: 'feeding' }
 const API_UNIT = { weight: 'kg', height: 'cm', head: 'cm', sleep_hours: 'hrs', feeding_amount: 'ml' }
 
-export default function AddGrowthModal({ onClose, onAdded }) {
+export default function AddGrowthModal({ onClose, onAdded, focusKey = '' }) {
   const today = new Date().toISOString().slice(0, 10)
   const [date, setDate]   = useState(today)
   const [values, setValues] = useState({ weight: '', height: '', head: '', sleep_hours: '', feeding_amount: '' })
@@ -142,7 +142,8 @@ export default function AddGrowthModal({ onClose, onAdded }) {
                   value={values[m.key]}
                   onChange={(e) => set(m.key, e.target.value)}
                   placeholder={m.placeholder}
-                  className="w-full border border-gray-200 rounded-xl px-2.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  autoFocus={focusKey === m.key}
+                  className={`w-full border rounded-xl px-2.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${focusKey === m.key ? 'border-blue-400 ring-2 ring-blue-100' : 'border-gray-200'}`}
                 />
               </div>
             ))}

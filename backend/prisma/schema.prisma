@@ -48,6 +48,7 @@ model Baby {
   medical_records  MedicalRecord[]
   daily_tips       DailyTip[]
   growth_summaries GrowthSummary[]
+  milestones       Milestone[]
 
   @@map("babies")
 }
@@ -127,4 +128,18 @@ model MedicalRecord {
   baby Baby @relation(fields: [baby_id], references: [id])
 
   @@map("medical_records")
+}
+
+model Milestone {
+  id          Int      @id @default(autoincrement())
+  baby_id     Int
+  title       String
+  category    String   @default("other")
+  achieved_at DateTime
+  notes       String?
+  created_at  DateTime @default(now())
+
+  baby Baby @relation(fields: [baby_id], references: [id])
+
+  @@map("milestones")
 }

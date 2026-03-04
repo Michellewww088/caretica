@@ -23,7 +23,8 @@ const authRouter      = require('./routes/auth');
 const stripeRouter    = require('./routes/stripe');
 const whoRouter       = require('./routes/who-api');
 const aiRouter        = require('./routes/ai');
-const reportRouter    = require('./routes/report');
+const reportRouter      = require('./routes/report');
+const milestonesRouter  = require('./routes/milestones');
 const { startScheduler } = require('./scheduler');
 
 const app  = express();
@@ -63,7 +64,8 @@ app.use('/api/reminders', remindersRouter);
 app.use('/api/upload',    uploadRouter);
 app.use('/api/who',       whoRouter);
 app.use('/api/ai',        aiRouter);
-app.use('/api/report',    reportRouter);
+app.use('/api/report',     reportRouter);
+app.use('/api/milestones', milestonesRouter);
 
 // ── BABIES ──
 app.get('/api/babies', authMiddleware, async (req, res) => {

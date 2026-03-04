@@ -6,9 +6,10 @@ const navItems = [
   { to: '/home',      label: 'Home',          icon: '⌂' },
   { to: '/chat',      label: 'AI Assistant',  icon: '🤖' },
   { to: '/dashboard', label: 'Dashboard',     icon: '◈' },
+  { to: '/report',    label: 'Growth Report', icon: '📋' },
   { to: '/reminders', label: 'Reminders',     icon: '◉' },
   { to: '/calendar',  label: 'Calendar',      icon: '▦' },
-  { to: '/upload',    label: 'Upload Report', icon: '↑' },
+  { to: '/upload',    label: 'Upload Record', icon: '↑' },
   { to: '/premium',   label: 'Premium',       icon: '★' },
 ]
 

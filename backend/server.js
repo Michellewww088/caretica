@@ -15,6 +15,7 @@ const cors     = require('cors');
 const path     = require('path');
 const prisma   = require('./lib/prisma');
 const { authMiddleware } = require('./middleware/auth');
+const { helmetMiddleware, apiLimiter } = require('./middleware/security');
 
 const remindersRouter = require('./routes/reminders');
 const uploadRouter    = require('./routes/upload');
@@ -22,10 +23,14 @@ const authRouter      = require('./routes/auth');
 const stripeRouter    = require('./routes/stripe');
 const whoRouter       = require('./routes/who-api');
 const aiRouter        = require('./routes/ai');
+const reportRouter    = require('./routes/report');
 const { startScheduler } = require('./scheduler');
 
 const app  = express();
 const PORT = process.env.PORT || 3001;
+
+// ── SECURITY ──
+app.use(helmetMiddleware);
 
 // ── MIDDLEWARE ──
 app.use(cors({
@@ -40,6 +45,9 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// ── GLOBAL RATE LIMIT ──
+app.use('/api/', apiLimiter);
+
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -50,6 +58,7 @@ app.use('/api/reminders', remindersRouter);
 app.use('/api/upload',    uploadRouter);
 app.use('/api/who',       whoRouter);
 app.use('/api/ai',        aiRouter);
+app.use('/api/report',    reportRouter);
 
 // ── BABIES ──
 app.get('/api/babies', authMiddleware, async (req, res) => {

@@ -14,6 +14,7 @@ const Premium    = lazy(() => import('./pages/Premium'))
 const Upload     = lazy(() => import('./pages/Upload'))
 const Chat       = lazy(() => import('./pages/Chat'))
 const Onboarding = lazy(() => import('./pages/Onboarding'))
+const Report     = lazy(() => import('./pages/Report'))
 const NotFound   = lazy(() => import('./pages/NotFound'))
 
 // Wraps authenticated routes — redirects to onboarding if not completed
@@ -47,6 +48,7 @@ export default function App() {
           <Route path="/premium"    element={<Protected><Premium /></Protected>} />
           <Route path="/upload"     element={<Protected><Upload /></Protected>} />
           <Route path="/chat"       element={<Protected><Chat /></Protected>} />
+          <Route path="/report"     element={<Protected><Report /></Protected>} />
           <Route path="/"           element={<Navigate to="/home" replace />} />
           <Route path="*"           element={<NotFound />} />
         </Routes>

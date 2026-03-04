@@ -10,9 +10,10 @@ const bcrypt   = require('bcryptjs');
 const router   = express.Router();
 const prisma   = require('../lib/prisma');
 const { generateToken, authMiddleware } = require('../middleware/auth');
+const { authLimiter, validateRegister, validateLogin, handleValidation } = require('../middleware/security');
 
 // ── REGISTER ──
-router.post('/register', async (req, res) => {
+router.post('/register', authLimiter, validateRegister, handleValidation, async (req, res) => {
   try {
     const { email, password, name } = req.body;
     if (!email || !password) return res.status(400).json({ error: 'Email and password are required' });
@@ -63,7 +64,7 @@ router.post('/register', async (req, res) => {
 });
 
 // ── LOGIN ──
-router.post('/login', async (req, res) => {
+router.post('/login', authLimiter, validateLogin, handleValidation, async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) return res.status(400).json({ error: 'Email and password are required' });

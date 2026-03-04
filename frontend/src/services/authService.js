@@ -48,4 +48,16 @@ export const authService = {
   authHeaders() {
     return { Authorization: `Bearer ${this.getToken()}` }
   },
+
+  async updateProfile(name) {
+    const res = await fetch(`${API}/auth/profile`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...this.authHeaders() },
+      body: JSON.stringify({ name }),
+    })
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.error || 'Update failed')
+    localStorage.setItem('user', JSON.stringify(data))
+    return data
+  },
 }

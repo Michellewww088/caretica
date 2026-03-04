@@ -132,6 +132,22 @@ router.post('/complete-onboarding', authMiddleware, async (req, res) => {
   }
 });
 
+// ── UPDATE PROFILE ──
+router.put('/profile', authMiddleware, async (req, res) => {
+  try {
+    const { name } = req.body;
+    if (!name || !name.trim()) return res.status(400).json({ error: 'Name is required' });
+
+    const user = await prisma.user.update({
+      where: { id: req.user.id },
+      data:  { name: name.trim() },
+    });
+    res.json(safeUser(user));
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ── TRIAL STATUS ──
 router.get('/trial-status', authMiddleware, async (req, res) => {
   try {

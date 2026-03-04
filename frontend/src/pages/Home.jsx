@@ -16,7 +16,7 @@ import {
   BABY_TYPE_CONFIG,
 } from '../config/babyStages'
 
-const API = '/api'
+const API = (import.meta.env.VITE_API_URL || '') + '/api'
 
 function getAgeMonths(birthdate) {
   if (!birthdate) return 0

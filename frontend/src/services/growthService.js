@@ -37,6 +37,25 @@ export const growthService = {
     return res.json()
   },
 
+  async deleteLog(id) {
+    const res = await fetch(`${API}/growth/${id}`, {
+      method: 'DELETE',
+      headers: authService.authHeaders(),
+    })
+    if (!res.ok) throw new Error((await res.json()).error || 'Delete failed')
+    return res.json()
+  },
+
+  async editLog(id, data) {
+    const res = await fetch(`${API}/growth/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', ...authService.authHeaders() },
+      body: JSON.stringify(data),
+    })
+    if (!res.ok) throw new Error((await res.json()).error || 'Edit failed')
+    return res.json()
+  },
+
   async getTrialStatus() {
     const res = await fetch(`${API}/auth/trial-status`, {
       headers: authService.authHeaders(),

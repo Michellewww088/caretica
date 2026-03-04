@@ -189,6 +189,48 @@ app.post('/api/growth/batch', authMiddleware, async (req, res) => {
   }
 });
 
+// ── DELETE GROWTH LOG ──
+app.delete('/api/growth/:id', authMiddleware, async (req, res) => {
+  try {
+    const id  = parseInt(req.params.id);
+    const baby = await prisma.baby.findFirst({ where: { user_id: req.user.id } });
+    if (!baby) return res.status(404).json({ error: 'No baby profile found' });
+
+    const log = await prisma.growthLog.findFirst({ where: { id, baby_id: baby.id } });
+    if (!log) return res.status(404).json({ error: 'Log entry not found' });
+
+    await prisma.growthLog.delete({ where: { id } });
+    res.json({ message: 'Deleted' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ── EDIT GROWTH LOG ──
+app.put('/api/growth/:id', authMiddleware, async (req, res) => {
+  try {
+    const id   = parseInt(req.params.id);
+    const baby = await prisma.baby.findFirst({ where: { user_id: req.user.id } });
+    if (!baby) return res.status(404).json({ error: 'No baby profile found' });
+
+    const log = await prisma.growthLog.findFirst({ where: { id, baby_id: baby.id } });
+    if (!log) return res.status(404).json({ error: 'Log entry not found' });
+
+    const { value, unit, logged_at } = req.body;
+    const updated = await prisma.growthLog.update({
+      where: { id },
+      data: {
+        value:     value     != null ? parseFloat(value) : log.value,
+        unit:      unit      != null ? unit               : log.unit,
+        logged_at: logged_at         ? new Date(logged_at): log.logged_at,
+      },
+    });
+    res.json(updated);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ── HEALTH CHECK ──
 app.get('/api/health', async (req, res) => {
   let dbStatus = 'disconnected';
